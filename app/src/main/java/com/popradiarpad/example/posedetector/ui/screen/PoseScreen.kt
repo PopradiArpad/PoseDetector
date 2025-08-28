@@ -62,7 +62,14 @@ fun PoseScreen(modifier: Modifier = Modifier, onFinish: () -> Unit) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
 
+    // In Android camera terminology, "preview" refers to the live image stream from the camera
+    // that is displayed on the device's screen.
+    // That View must be integrated into the Composable hierarchy:
+    // The recommended way for it:
+    //  1. remember the View
+    //  2. Put it into the AndroidView composable.
     val previewView = remember {
+        // This is a View and not a Composable.
         PreviewView(context).apply {
             implementationMode = PreviewView.ImplementationMode.PERFORMANCE
         }
