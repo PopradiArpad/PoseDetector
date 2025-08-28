@@ -177,44 +177,6 @@ private fun processImageProxy(
     }
 }
 
-private fun buildPoseLandmarker(context: Context, filesDir: File): PoseLandmarker {
-    val modelFile = File(filesDir, "pose_landmarker_lite.task")
-    if (!modelFile.exists()) {
-        downloadModel(modelFile)
-    }
-    val baseOptions = BaseOptions.builder()
-        .setModelAssetPath(modelFile.absolutePath) // Ensure this is an absolute path
-        .setDelegate(Delegate.GPU)
-        .build()
-    val optionsBuilder = PoseLandmarker.PoseLandmarkerOptions.builder()
-        .setBaseOptions(baseOptions)
-        .setRunningMode(RunningMode.IMAGE)
-        .setNumPoses(1)
-        .build()
-    return PoseLandmarker.createFromOptions(context, optionsBuilder)
-}
-
-private fun downloadModel(outFile: File) {
-    // Lightweight model from MediaPipe (public GitHub raw). You can replace with a local asset if desired.
-    val url =
-        URL("https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/1/${outFile.name}")
-    val connection = (url.openConnection() as HttpURLConnection).apply {
-        connectTimeout = 15000
-        readTimeout = 15000
-    }
-    connection.inputStream.use { input ->
-        FileOutputStream(outFile).use { output ->
-            val buffer = ByteArray(8 * 1024)
-            while (true) {
-                val read = input.read(buffer)
-                if (read <= 0) break
-                output.write(buffer, 0, read)
-            }
-            output.flush()
-        }
-    }
-}
-
 @ExperimentalGetImage
 private fun ImageProxy.toBitmap(): Bitmap? {
     val image = this.image ?: return null
@@ -307,6 +269,45 @@ private class PoseOverlayView(context: Context) : View(context) {
         for (p in points) {
             val (x, y) = mapPoint(p)
             canvas.drawCircle(x, y, 6f, pointPaint)
+        }
+    }
+}
+
+// Build Pose Landmarker
+// =====================
+private fun buildPoseLandmarker(context: Context, filesDir: File): PoseLandmarker {
+    val modelFile = File(filesDir, "pose_landmarker_lite.task")
+    if (!modelFile.exists()) {
+        downloadModel(modelFile)
+    }
+    val baseOptions = BaseOptions.builder()
+        .setModelAssetPath(modelFile.absolutePath) // Ensure this is an absolute path
+        .setDelegate(Delegate.GPU)
+        .build()
+    val optionsBuilder = PoseLandmarker.PoseLandmarkerOptions.builder()
+        .setBaseOptions(baseOptions)
+        .setRunningMode(RunningMode.IMAGE)
+        .setNumPoses(1)
+        .build()
+    return PoseLandmarker.createFromOptions(context, optionsBuilder)
+}
+
+private fun downloadModel(outFile: File) {
+    // Lightweight model from MediaPipe (public GitHub raw). You can replace with a local asset if desired.
+    val url = URL("https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/1/${outFile.name}")
+    val connection = (url.openConnection() as HttpURLConnection).apply {
+        connectTimeout = 15000
+        readTimeout = 15000
+    }
+    connection.inputStream.use { input ->
+        FileOutputStream(outFile).use { output ->
+            val buffer = ByteArray(8 * 1024)
+            while (true) {
+                val read = input.read(buffer)
+                if (read <= 0) break
+                output.write(buffer, 0, read)
+            }
+            output.flush()
         }
     }
 }
