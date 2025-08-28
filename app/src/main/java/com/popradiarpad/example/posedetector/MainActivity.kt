@@ -237,7 +237,7 @@ private fun buildPoseLandmarker(context: Context, filesDir: File): PoseLandmarke
 
 private fun downloadModel(outFile: File) {
     // Lightweight model from MediaPipe (public GitHub raw). You can replace with a local asset if desired.
-    val url = URL("https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/1/pose_landmarker_full.task")
+    val url = URL("https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/1/${outFile.name}")
     val connection = (url.openConnection() as HttpURLConnection).apply {
         connectTimeout = 15000
         readTimeout = 15000
