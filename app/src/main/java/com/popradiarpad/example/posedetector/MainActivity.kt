@@ -30,19 +30,22 @@ class MainActivity : ComponentActivity() {
         setContent {
             PoseDetectorTheme {
                 var showPose by remember { mutableStateOf(false) }
+
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    val modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding)
+
                     if (!showPose) {
-                        HomeScreen(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(innerPadding)
-                        ) { ensureCameraPermission { showPose = true } }
+                        HomeScreen(modifier = modifier) {
+                            ensureCameraPermission {
+                                showPose = true
+                            }
+                        }
                     } else {
-                        PoseScreen(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(innerPadding)
-                        ) { showPose = false }
+                        PoseScreen(modifier = modifier) {
+                            showPose = false
+                        }
                     }
                 }
             }
@@ -51,7 +54,8 @@ class MainActivity : ComponentActivity() {
 
     private fun ensureCameraPermission(onGranted: () -> Unit) {
         if (ContextCompat.checkSelfPermission(
-                    this, Manifest.permission.CAMERA
+                    this,
+                    Manifest.permission.CAMERA
             ) == PackageManager.PERMISSION_GRANTED
         ) {
             onGranted()
