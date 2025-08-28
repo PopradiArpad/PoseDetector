@@ -24,7 +24,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,7 +37,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
@@ -48,6 +46,7 @@ import com.google.mediapipe.tasks.components.containers.NormalizedLandmark
 import com.google.mediapipe.tasks.vision.core.RunningMode
 import com.google.mediapipe.tasks.vision.poselandmarker.PoseLandmarker
 import com.google.mediapipe.tasks.vision.poselandmarker.PoseLandmarkerResult
+import com.popradiarpad.example.posedetector.ui.screen.HomeScreen
 import com.popradiarpad.example.posedetector.ui.theme.PoseDetectorTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -94,17 +93,6 @@ class MainActivity : ComponentActivity() {
             onGranted()
         } else {
             cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
-        }
-    }
-}
-
-@Composable
-private fun HomeScreen(modifier: Modifier = Modifier, onStart: () -> Unit) {
-    Box(modifier = modifier, contentAlignment = Alignment.Center) {
-        Button(onClick = onStart, modifier = Modifier
-            .fillMaxWidth(0.8f)
-            .height(72.dp)) {
-            Text("Start Pose Detection", style = MaterialTheme.typography.titleLarge)
         }
     }
 }
@@ -220,7 +208,7 @@ private fun processImageProxy(
 }
 
 private fun buildPoseLandmarker(context: Context, filesDir: File): PoseLandmarker {
-    val modelFile = File(filesDir, "pose_landmarker_full.task")
+    val modelFile = File(filesDir, "pose_landmarker_lite.task")
     if (!modelFile.exists()) {
         downloadModel(modelFile)
     }
@@ -237,7 +225,8 @@ private fun buildPoseLandmarker(context: Context, filesDir: File): PoseLandmarke
 
 private fun downloadModel(outFile: File) {
     // Lightweight model from MediaPipe (public GitHub raw). You can replace with a local asset if desired.
-    val url = URL("https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/1/${outFile.name}")
+    val url =
+        URL("https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/1/${outFile.name}")
     val connection = (url.openConnection() as HttpURLConnection).apply {
         connectTimeout = 15000
         readTimeout = 15000
@@ -352,8 +341,3 @@ private class PoseOverlayView(context: android.content.Context) : View(context) 
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun HomePreview() {
-    PoseDetectorTheme { HomeScreen { } }
-}
