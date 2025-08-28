@@ -1,6 +1,6 @@
 [versions]
 agp = "8.12.1"
-cameraCore = "1.4.1"
+cameraCore = "1.4.2"
 kotlin = "2.2.10"
 coreKtx = "1.17.0"
 junit = "4.13.2"
@@ -9,7 +9,7 @@ espressoCore = "3.7.0"
 lifecycleRuntimeKtx = "2.9.3"
 activityCompose = "1.10.1"
 composeBom = "2025.08.01"
-tasksVision = "0.20230731"
+tasksVision = "0.10.26.1"
 
 [libraries]
 androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraCore" }
