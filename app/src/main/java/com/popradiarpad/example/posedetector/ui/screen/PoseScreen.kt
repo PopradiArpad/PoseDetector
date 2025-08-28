@@ -75,7 +75,7 @@ fun PoseScreen(modifier: Modifier = Modifier, onFinish: () -> Unit) {
     }
 
     DisposableEffect(Unit) {
-        val cameraProviderFuture = ProcessCameraProvider.Companion.getInstance(context)
+        val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
         val executor = ContextCompat.getMainExecutor(context)
         val analysisExecutor = Executors.newSingleThreadExecutor()
 
@@ -134,15 +134,15 @@ fun PoseScreen(modifier: Modifier = Modifier, onFinish: () -> Unit) {
     }
 
     Box(modifier = modifier) {
-        AndroidView(factory = { previewView }, modifier = Modifier.Companion.fillMaxSize())
-        AndroidView(factory = { overlayView }, modifier = Modifier.Companion.fillMaxSize())
+        AndroidView(factory = { previewView }, modifier = Modifier.fillMaxSize())
+        AndroidView(factory = { overlayView }, modifier = Modifier.fillMaxSize())
         Box(
-                modifier = Modifier.Companion.fillMaxSize(),
-                contentAlignment = Alignment.Companion.BottomCenter
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.BottomCenter
         ) {
             Button(
                     onClick = onFinish,
-                    modifier = Modifier.Companion
+                    modifier = Modifier
                         .padding(16.dp)
                         .fillMaxWidth()
                         .height(56.dp)
