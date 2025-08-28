@@ -160,53 +160,6 @@ fun PoseScreen(modifier: Modifier = Modifier, onFinish: () -> Unit) {
     }
 }
 
-private fun processImageProxy(
-        landmarker: PoseLandmarker,
-        imageProxy: ImageProxy,
-        onResult: (PoseLandmarkerResult, Int, Int, Int) -> Unit
-) {
-    try {
-        val bitmap = imageProxy.toBitmap() ?: run { imageProxy.close(); return }
-        val mpImage: MPImage = BitmapImageBuilder(bitmap).build()
-        val result = landmarker.detect(mpImage)
-        onResult(result, bitmap.width, bitmap.height, imageProxy.imageInfo.rotationDegrees)
-    } catch (_: Throwable) {
-        // ignore frame errors
-    } finally {
-        imageProxy.close()
-    }
-}
-
-@ExperimentalGetImage
-private fun ImageProxy.toBitmap(): Bitmap? {
-    val image = this.image ?: return null
-    // Convert YUV_420_888 to NV21
-    val yBuffer = image.planes[0].buffer
-    val uBuffer = image.planes[1].buffer
-    val vBuffer = image.planes[2].buffer
-
-    val ySize = yBuffer.remaining()
-    val uSize = uBuffer.remaining()
-    val vSize = vBuffer.remaining()
-
-    val nv21 = ByteArray(ySize + uSize + vSize)
-    yBuffer.get(nv21, 0, ySize)
-    vBuffer.get(nv21, ySize, vSize)
-    uBuffer.get(nv21, ySize + vSize, uSize)
-
-    val yuvImage = YuvImage(
-            nv21,
-            ImageFormat.NV21,
-            this.width,
-            this.height,
-            null
-    )
-    val out = ByteArrayOutputStream()
-    yuvImage.compressToJpeg(Rect(0, 0, this.width, this.height), 80, out)
-    val imageBytes = out.toByteArray()
-    return BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
-}
-
 private class PoseOverlayView(context: Context) : View(context) {
     private val pointPaint = Paint().apply {
         color = Color.GREEN
@@ -271,6 +224,55 @@ private class PoseOverlayView(context: Context) : View(context) {
             canvas.drawCircle(x, y, 6f, pointPaint)
         }
     }
+}
+
+// Process ImageProxy
+// ==================
+private fun processImageProxy(
+        landmarker: PoseLandmarker,
+        imageProxy: ImageProxy,
+        onResult: (PoseLandmarkerResult, Int, Int, Int) -> Unit
+) {
+    try {
+        val bitmap = imageProxy.toBitmap() ?: run { imageProxy.close(); return }
+        val mpImage: MPImage = BitmapImageBuilder(bitmap).build()
+        val result = landmarker.detect(mpImage)
+        onResult(result, bitmap.width, bitmap.height, imageProxy.imageInfo.rotationDegrees)
+    } catch (_: Throwable) {
+        // ignore frame errors
+    } finally {
+        imageProxy.close()
+    }
+}
+
+@ExperimentalGetImage
+private fun ImageProxy.toBitmap(): Bitmap? {
+    val image = this.image ?: return null
+    // Convert YUV_420_888 to NV21
+    val yBuffer = image.planes[0].buffer
+    val uBuffer = image.planes[1].buffer
+    val vBuffer = image.planes[2].buffer
+
+    val ySize = yBuffer.remaining()
+    val uSize = uBuffer.remaining()
+    val vSize = vBuffer.remaining()
+
+    val nv21 = ByteArray(ySize + uSize + vSize)
+    yBuffer.get(nv21, 0, ySize)
+    vBuffer.get(nv21, ySize, vSize)
+    uBuffer.get(nv21, ySize + vSize, uSize)
+
+    val yuvImage = YuvImage(
+            nv21,
+            ImageFormat.NV21,
+            this.width,
+            this.height,
+            null
+    )
+    val out = ByteArrayOutputStream()
+    yuvImage.compressToJpeg(Rect(0, 0, this.width, this.height), 80, out)
+    val imageBytes = out.toByteArray()
+    return BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
 }
 
 // Build Pose Landmarker
