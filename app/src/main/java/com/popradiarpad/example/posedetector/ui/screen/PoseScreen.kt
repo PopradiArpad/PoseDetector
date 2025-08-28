@@ -186,12 +186,12 @@ private fun buildPoseLandmarker(context: Context, filesDir: File): PoseLandmarke
         .setModelAssetPath(modelFile.absolutePath) // Ensure this is an absolute path
         .setDelegate(Delegate.GPU)
         .build()
-    val options = PoseLandmarker.PoseLandmarkerOptions.builder()
+    val optionsBuilder = PoseLandmarker.PoseLandmarkerOptions.builder()
         .setBaseOptions(baseOptions)
         .setRunningMode(RunningMode.IMAGE)
         .setNumPoses(1)
         .build()
-    return PoseLandmarker.createFromOptions(context, options)
+    return PoseLandmarker.createFromOptions(context, optionsBuilder)
 }
 
 private fun downloadModel(outFile: File) {
