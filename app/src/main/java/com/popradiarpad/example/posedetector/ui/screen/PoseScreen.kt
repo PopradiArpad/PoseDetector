@@ -55,6 +55,7 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.util.concurrent.Executors
 import com.google.mediapipe.tasks.core.Delegate
+import com.popradiarpad.example.posedetector.ui.OverlayView
 
 
 @Composable
@@ -75,6 +76,7 @@ fun PoseScreen(modifier: Modifier = Modifier, onFinish: () -> Unit) {
         }
     }
     val overlayView = remember { PoseOverlayView(context) }
+//    val overlayView = remember { OverlayView(context) }
 
     var landmarker by remember { mutableStateOf<PoseLandmarker?>(null) }
 
