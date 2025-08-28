@@ -54,6 +54,8 @@ import java.io.FileOutputStream
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.concurrent.Executors
+import com.google.mediapipe.tasks.core.Delegate
+
 
 @Composable
 fun PoseScreen(modifier: Modifier = Modifier, onFinish: () -> Unit) {
@@ -174,7 +176,8 @@ private fun buildPoseLandmarker(context: Context, filesDir: File): PoseLandmarke
         downloadModel(modelFile)
     }
     val baseOptions = BaseOptions.builder()
-        .setModelAssetPath(modelFile.absolutePath)
+        .setModelAssetPath(modelFile.absolutePath) // Ensure this is an absolute path
+        .setDelegate(Delegate.GPU)
         .build()
     val options = PoseLandmarker.PoseLandmarkerOptions.builder()
         .setBaseOptions(baseOptions)
