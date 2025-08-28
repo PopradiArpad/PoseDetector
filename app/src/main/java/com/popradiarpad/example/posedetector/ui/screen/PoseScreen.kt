@@ -35,10 +35,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.google.mediapipe.framework.image.BitmapImageBuilder
 import com.google.mediapipe.framework.image.MPImage
 import com.google.mediapipe.tasks.components.containers.NormalizedLandmark
@@ -54,13 +54,22 @@ import java.io.FileOutputStream
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.concurrent.Executors
+import com.google.mediapipe.tasks.core.Delegate
+
 
 @Composable
 fun PoseScreen(modifier: Modifier = Modifier, onFinish: () -> Unit) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
 
+    // In Android camera terminology, "preview" refers to the live image stream from the camera
+    // that is displayed on the device's screen.
+    // That View must be integrated into the Composable hierarchy:
+    // The recommended way for it:
+    //  1. remember the View
+    //  2. Put it into the AndroidView composable.
     val previewView = remember {
+        // This is a View and not a Composable.
         PreviewView(context).apply {
             implementationMode = PreviewView.ImplementationMode.PERFORMANCE
         }
@@ -75,7 +84,7 @@ fun PoseScreen(modifier: Modifier = Modifier, onFinish: () -> Unit) {
     }
 
     DisposableEffect(Unit) {
-        val cameraProviderFuture = ProcessCameraProvider.Companion.getInstance(context)
+        val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
         val executor = ContextCompat.getMainExecutor(context)
         val analysisExecutor = Executors.newSingleThreadExecutor()
 
@@ -134,105 +143,21 @@ fun PoseScreen(modifier: Modifier = Modifier, onFinish: () -> Unit) {
     }
 
     Box(modifier = modifier) {
-        AndroidView(factory = { previewView }, modifier = Modifier.Companion.fillMaxSize())
-        AndroidView(factory = { overlayView }, modifier = Modifier.Companion.fillMaxSize())
+        AndroidView(factory = { previewView }, modifier = Modifier.fillMaxSize())
+        AndroidView(factory = { overlayView }, modifier = Modifier.fillMaxSize())
         Box(
-                modifier = Modifier.Companion.fillMaxSize(),
-                contentAlignment = Alignment.Companion.BottomCenter
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.BottomCenter
         ) {
             Button(
                     onClick = onFinish,
-                    modifier = Modifier.Companion
+                    modifier = Modifier
                         .padding(16.dp)
                         .fillMaxWidth()
                         .height(56.dp)
             ) { Text("Finish") }
         }
     }
-}
-
-private fun processImageProxy(
-        landmarker: PoseLandmarker,
-        imageProxy: ImageProxy,
-        onResult: (PoseLandmarkerResult, Int, Int, Int) -> Unit
-) {
-    try {
-        val bitmap = imageProxy.toBitmap() ?: run { imageProxy.close(); return }
-        val mpImage: MPImage = BitmapImageBuilder(bitmap).build()
-        val result = landmarker.detect(mpImage)
-        onResult(result, bitmap.width, bitmap.height, imageProxy.imageInfo.rotationDegrees)
-    } catch (_: Throwable) {
-        // ignore frame errors
-    } finally {
-        imageProxy.close()
-    }
-}
-
-private fun buildPoseLandmarker(context: Context, filesDir: File): PoseLandmarker {
-    val modelFile = File(filesDir, "pose_landmarker_lite.task")
-    if (!modelFile.exists()) {
-        downloadModel(modelFile)
-    }
-    val baseOptions = BaseOptions.builder()
-        .setModelAssetPath(modelFile.absolutePath)
-        .build()
-    val options = PoseLandmarker.PoseLandmarkerOptions.builder()
-        .setBaseOptions(baseOptions)
-        .setRunningMode(RunningMode.IMAGE)
-        .setNumPoses(1)
-        .build()
-    return PoseLandmarker.createFromOptions(context, options)
-}
-
-private fun downloadModel(outFile: File) {
-    // Lightweight model from MediaPipe (public GitHub raw). You can replace with a local asset if desired.
-    val url =
-        URL("https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/1/${outFile.name}")
-    val connection = (url.openConnection() as HttpURLConnection).apply {
-        connectTimeout = 15000
-        readTimeout = 15000
-    }
-    connection.inputStream.use { input ->
-        FileOutputStream(outFile).use { output ->
-            val buffer = ByteArray(8 * 1024)
-            while (true) {
-                val read = input.read(buffer)
-                if (read <= 0) break
-                output.write(buffer, 0, read)
-            }
-            output.flush()
-        }
-    }
-}
-
-@ExperimentalGetImage
-private fun ImageProxy.toBitmap(): Bitmap? {
-    val image = this.image ?: return null
-    // Convert YUV_420_888 to NV21
-    val yBuffer = image.planes[0].buffer
-    val uBuffer = image.planes[1].buffer
-    val vBuffer = image.planes[2].buffer
-
-    val ySize = yBuffer.remaining()
-    val uSize = uBuffer.remaining()
-    val vSize = vBuffer.remaining()
-
-    val nv21 = ByteArray(ySize + uSize + vSize)
-    yBuffer.get(nv21, 0, ySize)
-    vBuffer.get(nv21, ySize, vSize)
-    uBuffer.get(nv21, ySize + vSize, uSize)
-
-    val yuvImage = YuvImage(
-            nv21,
-            ImageFormat.NV21,
-            this.width,
-            this.height,
-            null
-    )
-    val out = ByteArrayOutputStream()
-    yuvImage.compressToJpeg(Rect(0, 0, this.width, this.height), 80, out)
-    val imageBytes = out.toByteArray()
-    return BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
 }
 
 private class PoseOverlayView(context: Context) : View(context) {
@@ -297,6 +222,94 @@ private class PoseOverlayView(context: Context) : View(context) {
         for (p in points) {
             val (x, y) = mapPoint(p)
             canvas.drawCircle(x, y, 6f, pointPaint)
+        }
+    }
+}
+
+// Process ImageProxy
+// ==================
+private fun processImageProxy(
+        landmarker: PoseLandmarker,
+        imageProxy: ImageProxy,
+        onResult: (PoseLandmarkerResult, Int, Int, Int) -> Unit
+) {
+    try {
+        val bitmap = imageProxy.toBitmap() ?: run { imageProxy.close(); return }
+        val mpImage: MPImage = BitmapImageBuilder(bitmap).build()
+        val result = landmarker.detect(mpImage)
+        onResult(result, bitmap.width, bitmap.height, imageProxy.imageInfo.rotationDegrees)
+    } catch (_: Throwable) {
+        // ignore frame errors
+    } finally {
+        imageProxy.close()
+    }
+}
+
+@ExperimentalGetImage
+private fun ImageProxy.toBitmap(): Bitmap? {
+    val image = this.image ?: return null
+    // Convert YUV_420_888 to NV21
+    val yBuffer = image.planes[0].buffer
+    val uBuffer = image.planes[1].buffer
+    val vBuffer = image.planes[2].buffer
+
+    val ySize = yBuffer.remaining()
+    val uSize = uBuffer.remaining()
+    val vSize = vBuffer.remaining()
+
+    val nv21 = ByteArray(ySize + uSize + vSize)
+    yBuffer.get(nv21, 0, ySize)
+    vBuffer.get(nv21, ySize, vSize)
+    uBuffer.get(nv21, ySize + vSize, uSize)
+
+    val yuvImage = YuvImage(
+            nv21,
+            ImageFormat.NV21,
+            this.width,
+            this.height,
+            null
+    )
+    val out = ByteArrayOutputStream()
+    yuvImage.compressToJpeg(Rect(0, 0, this.width, this.height), 80, out)
+    val imageBytes = out.toByteArray()
+    return BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+}
+
+// Build Pose Landmarker
+// =====================
+private fun buildPoseLandmarker(context: Context, filesDir: File): PoseLandmarker {
+    val modelFile = File(filesDir, "pose_landmarker_lite.task")
+    if (!modelFile.exists()) {
+        downloadModel(modelFile)
+    }
+    val baseOptions = BaseOptions.builder()
+        .setModelAssetPath(modelFile.absolutePath) // Ensure this is an absolute path
+        .setDelegate(Delegate.GPU)
+        .build()
+    val optionsBuilder = PoseLandmarker.PoseLandmarkerOptions.builder()
+        .setBaseOptions(baseOptions)
+        .setRunningMode(RunningMode.IMAGE)
+        .setNumPoses(1)
+        .build()
+    return PoseLandmarker.createFromOptions(context, optionsBuilder)
+}
+
+private fun downloadModel(outFile: File) {
+    // Lightweight model from MediaPipe (public GitHub raw). You can replace with a local asset if desired.
+    val url = URL("https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/1/${outFile.name}")
+    val connection = (url.openConnection() as HttpURLConnection).apply {
+        connectTimeout = 15000
+        readTimeout = 15000
+    }
+    connection.inputStream.use { input ->
+        FileOutputStream(outFile).use { output ->
+            val buffer = ByteArray(8 * 1024)
+            while (true) {
+                val read = input.read(buffer)
+                if (read <= 0) break
+                output.write(buffer, 0, read)
+            }
+            output.flush()
         }
     }
 }
