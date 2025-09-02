@@ -9,14 +9,10 @@ import android.graphics.ImageFormat
 import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.YuvImage
-import android.util.Size
 import android.view.View
-import androidx.camera.core.CameraSelector
+import android.widget.Toast
 import androidx.camera.core.ExperimentalGetImage
-import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
-import androidx.camera.core.Preview
-import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,35 +23,31 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.google.mediapipe.framework.image.BitmapImageBuilder
 import com.google.mediapipe.framework.image.MPImage
 import com.google.mediapipe.tasks.components.containers.NormalizedLandmark
 import com.google.mediapipe.tasks.core.BaseOptions
+import com.google.mediapipe.tasks.core.Delegate
 import com.google.mediapipe.tasks.vision.core.RunningMode
 import com.google.mediapipe.tasks.vision.poselandmarker.PoseLandmarker
 import com.google.mediapipe.tasks.vision.poselandmarker.PoseLandmarkerResult
+import com.popradiarpad.example.posedetector.PoseLandmarkerHelper
+import com.popradiarpad.example.posedetector.ui.OverlayView
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.net.HttpURLConnection
 import java.net.URL
-import java.util.concurrent.Executors
-import com.google.mediapipe.tasks.core.Delegate
-import com.popradiarpad.example.posedetector.ui.OverlayView
 
 
 @Composable
@@ -75,74 +67,117 @@ fun PoseScreen(modifier: Modifier = Modifier, onFinish: () -> Unit) {
             implementationMode = PreviewView.ImplementationMode.PERFORMANCE
         }
     }
-    val overlayView = remember { PoseOverlayView(context) }
-//    val overlayView = remember { OverlayView(context) }
+    // -----------
+//    val overlayView = remember { PoseOverlayView(context) }
 
-    var landmarker by remember { mutableStateOf<PoseLandmarker?>(null) }
+//    var landmarker by remember { mutableStateOf<PoseLandmarker?>(null) }
+//
+//    // Download model and init landmarker once.
+//    LaunchedEffect(Unit) {
+//        landmarker = withContext(Dispatchers.IO) { buildPoseLandmarker(context, context.filesDir) }
+//    }
+//
+//    DisposableEffect(Unit) {
+//        val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
+//        val executor = ContextCompat.getMainExecutor(context)
+//        val analysisExecutor = Executors.newSingleThreadExecutor()
+//
+//        var bound = false
+//
+//        fun bindCamera() {
+//            val provider = cameraProviderFuture.get()
+//            provider.unbindAll()
+//
+//            val preview = Preview.Builder()
+//                .build()
+//                .also { it.setSurfaceProvider(previewView.surfaceProvider) }
+//
+//            val analysis = ImageAnalysis.Builder()
+//                .setTargetResolution(Size(1280, 720))
+//                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+//                .build()
+//
+//            analysis.setAnalyzer(analysisExecutor) { imageProxy ->
+//                val lm = landmarker
+//                if (lm != null) {
+//                    processImageProxy(
+//                            lm, imageProxy
+//                    ) { result, imageWidth, imageHeight, rotationDegrees ->
+//                        overlayView.onPoseResult(result, imageWidth, imageHeight, rotationDegrees)
+//                    }
+//                } else {
+//                    imageProxy.close()
+//                }
+//            }
+//
+//            try {
+//                provider.bindToLifecycle(
+//                        lifecycleOwner,
+//                        CameraSelector.DEFAULT_BACK_CAMERA,
+//                        preview,
+//                        analysis
+//                )
+//                bound = true
+//            } catch (_: Exception) {
+//            }
+//        }
+//
+//        val listener = Runnable { bindCamera() }
+//        cameraProviderFuture.addListener(listener, executor)
+//
+//        onDispose {
+//            try {
+//                val provider = cameraProviderFuture.get()
+//                if (bound) provider.unbindAll()
+//            } catch (_: Exception) {
+//            }
+//            analysisExecutor.shutdown()
+//            landmarker?.close()
+//        }
+//    }
+    // -----------
+    val scope = rememberCoroutineScope()
+    val cpuScope = rememberCoroutineScope { Dispatchers.Default }
 
-    // Download model and init landmarker once.
-    LaunchedEffect(Unit) {
-        landmarker = withContext(Dispatchers.IO) { buildPoseLandmarker(context, context.filesDir) }
-    }
-
+    val overlayView = remember { OverlayView(context) }
     DisposableEffect(Unit) {
-        val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
-        val executor = ContextCompat.getMainExecutor(context)
-        val analysisExecutor = Executors.newSingleThreadExecutor()
+        val poseLandmarkerHelper =
+            PoseLandmarkerHelper(
+                    context = context,
+                    poseLandmarkerHelperListener = object :
+                        PoseLandmarkerHelper.LandmarkerListener {
+                        override fun onResults(resultBundle: PoseLandmarkerHelper.ResultBundle) {
+                            scope.launch {
+                                overlayView.setResults(
+                                        resultBundle.results.first(),
+                                        resultBundle.inputImageHeight,
+                                        resultBundle.inputImageWidth,
+                                        RunningMode.LIVE_STREAM
+                                )
+                                // Force a redraw
+                                overlayView.invalidate()
+                            }
+                        }
 
-        var bound = false
-
-        fun bindCamera() {
-            val provider = cameraProviderFuture.get()
-            provider.unbindAll()
-
-            val preview = Preview.Builder()
-                .build()
-                .also { it.setSurfaceProvider(previewView.surfaceProvider) }
-
-            val analysis = ImageAnalysis.Builder()
-                .setTargetResolution(Size(1280, 720))
-                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-                .build()
-
-            analysis.setAnalyzer(analysisExecutor) { imageProxy ->
-                val lm = landmarker
-                if (lm != null) {
-                    processImageProxy(
-                            lm, imageProxy
-                    ) { result, imageWidth, imageHeight, rotationDegrees ->
-                        overlayView.onPoseResult(result, imageWidth, imageHeight, rotationDegrees)
+                        override fun onError(error: String, errorCode: Int) {
+                            scope.launch {
+                                Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+                            }
+                        }
                     }
-                } else {
-                    imageProxy.close()
-                }
-            }
+            )
 
-            try {
-                provider.bindToLifecycle(
-                        lifecycleOwner,
-                        CameraSelector.DEFAULT_BACK_CAMERA,
-                        preview,
-                        analysis
-                )
-                bound = true
-            } catch (_: Exception) {
-            }
+        // Launch the setup on the CPU-bound dispatcher
+        cpuScope.launch {
+            poseLandmarkerHelper.setupPoseLandmarker()
         }
-
-        val listener = Runnable { bindCamera() }
-        cameraProviderFuture.addListener(listener, executor)
 
         onDispose {
-            try {
-                val provider = cameraProviderFuture.get()
-                if (bound) provider.unbindAll()
-            } catch (_: Exception) {
-            }
-            analysisExecutor.shutdown()
-            landmarker?.close()
+            // TODO handle onPause too
+            poseLandmarkerHelper.clearPoseLandmarker()
         }
     }
+
 
     Box(modifier = modifier) {
         AndroidView(factory = { previewView }, modifier = Modifier.fillMaxSize())
@@ -298,7 +333,8 @@ private fun buildPoseLandmarker(context: Context, filesDir: File): PoseLandmarke
 
 private fun downloadModel(outFile: File) {
     // Lightweight model from MediaPipe (public GitHub raw). You can replace with a local asset if desired.
-    val url = URL("https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/1/${outFile.name}")
+    val url =
+        URL("https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/1/${outFile.name}")
     val connection = (url.openConnection() as HttpURLConnection).apply {
         connectTimeout = 15000
         readTimeout = 15000
