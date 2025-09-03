@@ -7,7 +7,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels // Added import
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -17,23 +17,26 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
+import com.google.mediapipe.tasks.vision.core.RunningMode
 import com.popradiarpad.example.posedetector.ui.screen.HomeScreen
 import com.popradiarpad.example.posedetector.ui.screen.PoseScreen
-import com.popradiarpad.example.posedetector.ui.screen.PoseViewModel // Added import
+import com.popradiarpad.example.posedetector.ui.screen.PoseViewModel
 import com.popradiarpad.example.posedetector.ui.theme.PoseDetectorTheme
 
 class MainActivity : ComponentActivity() {
     private val cameraPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { /* Optionally handle if permission is denied */ }
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { /* Optionally handle */ }
 
-    private val poseViewModel: PoseViewModel by viewModels() // Get ViewModel instance
+    private val poseViewModel: PoseViewModel by viewModels()
+
+    // Define the desired running mode
+    private val desiredRunningMode = RunningMode.LIVE_STREAM
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        // Initialize the camera via the ViewModel
-        poseViewModel.initializeCamera(this)
+        poseViewModel.initialize(this, desiredRunningMode)
 
         setContent {
             PoseDetectorTheme {
@@ -51,13 +54,15 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     } else {
-                        // Pass the ViewModel to PoseScreen
+                        // Pass RunningMode to PoseScreen
                         PoseScreen(
                             modifier = modifier,
-                            poseViewModel = poseViewModel // Added parameter
-                        ) {
-                            showPose = false
-                        }
+                            poseViewModel = poseViewModel,
+                            runningMode = desiredRunningMode,
+                            onFinish = {
+                                showPose = false
+                            }
+                        )
                     }
                 }
             }
@@ -73,8 +78,6 @@ class MainActivity : ComponentActivity() {
                 onGranted()
             }
             shouldShowRequestPermissionRationale(Manifest.permission.CAMERA) -> {
-                // Optionally show a rationale to the user if they\'ve previously denied the permission
-                // For now, just request again or guide them to settings
                 cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
             }
             else -> {
