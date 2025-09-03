@@ -119,7 +119,7 @@ class PoseViewModel : ViewModel() {
         }
 
         previewUseCase = Preview.Builder().build().also {
-            it.setSurfaceProvider(surfaceProvider)
+            it.surfaceProvider = surfaceProvider
         }
 
         imageAnalysisUseCase = ImageAnalysis.Builder()

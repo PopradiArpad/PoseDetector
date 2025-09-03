@@ -59,7 +59,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private val cameraPermissionLauncher =
+    private val permissionLauncher =
         registerForActivityResult(
                 ActivityResultContracts.RequestPermission()
         ) { /* Optionally handle */ }
@@ -74,11 +74,11 @@ class MainActivity : ComponentActivity() {
             }
 
             shouldShowRequestPermissionRationale(Manifest.permission.CAMERA) -> {
-                cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+                permissionLauncher.launch(Manifest.permission.CAMERA)
             }
 
             else -> {
-                cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+                permissionLauncher.launch(Manifest.permission.CAMERA)
             }
         }
     }
