@@ -37,7 +37,7 @@ fun PoseScreen(
     val previewView = remember {
         PreviewView(context).apply {
             implementationMode = PreviewView.ImplementationMode.PERFORMANCE
-            // scaleType = PreviewView.ScaleType.FILL_CENTER
+            scaleType = PreviewView.ScaleType.FILL_CENTER
         }
     }
 
