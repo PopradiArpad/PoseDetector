@@ -24,19 +24,14 @@ import com.popradiarpad.example.posedetector.ui.screen.PoseViewModel
 import com.popradiarpad.example.posedetector.ui.theme.PoseDetectorTheme
 
 class MainActivity : ComponentActivity() {
-    private val cameraPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { /* Optionally handle */ }
-
     private val poseViewModel: PoseViewModel by viewModels()
-
-    // Define the desired running mode
-    private val desiredRunningMode = RunningMode.LIVE_STREAM
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        poseViewModel.initialize(this, desiredRunningMode)
+        val runningMode = RunningMode.LIVE_STREAM
+        poseViewModel.initialize(this, runningMode)
 
         setContent {
             PoseDetectorTheme {
@@ -49,19 +44,14 @@ class MainActivity : ComponentActivity() {
 
                     if (!showPose) {
                         HomeScreen(modifier = modifier) {
-                            ensureCameraPermission {
-                                showPose = true
-                            }
+                            ensureCameraPermission { showPose = true }
                         }
                     } else {
-                        // Pass RunningMode to PoseScreen
                         PoseScreen(
-                            modifier = modifier,
-                            poseViewModel = poseViewModel,
-                            runningMode = desiredRunningMode,
-                            onFinish = {
-                                showPose = false
-                            }
+                                modifier = modifier,
+                                poseViewModel = poseViewModel,
+                                runningMode = runningMode,
+                                onFinish = { showPose = false }
                         )
                     }
                 }
@@ -69,17 +59,24 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    private val cameraPermissionLauncher =
+        registerForActivityResult(
+                ActivityResultContracts.RequestPermission()
+        ) { /* Optionally handle */ }
+
     private fun ensureCameraPermission(onGranted: () -> Unit) {
         when {
             ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.CAMERA
+                    this,
+                    Manifest.permission.CAMERA
             ) == PackageManager.PERMISSION_GRANTED -> {
                 onGranted()
             }
+
             shouldShowRequestPermissionRationale(Manifest.permission.CAMERA) -> {
                 cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
             }
+
             else -> {
                 cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
             }
