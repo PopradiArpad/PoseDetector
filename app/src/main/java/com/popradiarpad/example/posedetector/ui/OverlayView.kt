@@ -26,7 +26,7 @@ import com.google.mediapipe.tasks.vision.poselandmarker.PoseLandmarkerResult
 import kotlin.math.max
 import kotlin.math.min
 
-class OverlayView(context: Context) :
+class OverlayView(context: Context?) :
     View(context) {
 
     private var results: PoseLandmarkerResult? = null
@@ -62,31 +62,76 @@ class OverlayView(context: Context) :
     override fun draw(canvas: Canvas) {
         super.draw(canvas)
         results?.let { poseLandmarkerResult ->
-            for (landmark in poseLandmarkerResult.landmarks()) {
-                for (normalizedLandmark in landmark) {
+            // Check if there are any landmarks to draw
+            if (poseLandmarkerResult.landmarks().isEmpty()) {
+                return@let
+            }
+
+            // Calculate the scaled image dimensions
+            // These are the dimensions of the full image if it were scaled by scaleFactor
+            val scaledImageWidth = imageWidth * scaleFactor
+            val scaledImageHeight = imageHeight * scaleFactor
+
+            // Calculate the offset of the scaled image within the view
+            // This centers the scaled image within the OverlayView bounds
+            val offsetX = (width - scaledImageWidth) / 2f
+            val offsetY = (height - scaledImageHeight) / 2f
+
+            // The result bundle provides a list of PoseLandmarkerResult, but for live stream, we usually expect one.
+            // And PoseLandmarkerResult contains a list of landmark lists (one list per detected pose).
+            // Typically, for single pose detection, landmarks().get(0) is used.
+            for (landmarkList in poseLandmarkerResult.landmarks()) { // Iterate over each detected pose
+                // Draw landmarks
+                for (normalizedLandmark in landmarkList) {
                     canvas.drawPoint(
-                            normalizedLandmark.x() * imageWidth * scaleFactor,
-                            normalizedLandmark.y() * imageHeight * scaleFactor,
+                            offsetX + normalizedLandmark.x() * scaledImageWidth, // Apply offsetX
+                            offsetY + normalizedLandmark.y() * scaledImageHeight, // Apply offsetY
                             pointPaint
                     )
                 }
 
-                PoseLandmarker.POSE_LANDMARKS.forEach {
-                    canvas.drawLine(
-                            poseLandmarkerResult.landmarks().get(0).get(it!!.start())
-                                .x() * imageWidth * scaleFactor,
-                            poseLandmarkerResult.landmarks().get(0).get(it.start())
-                                .y() * imageHeight * scaleFactor,
-                            poseLandmarkerResult.landmarks().get(0).get(it.end())
-                                .x() * imageWidth * scaleFactor,
-                            poseLandmarkerResult.landmarks().get(0).get(it.end())
-                                .y() * imageHeight * scaleFactor,
-                            linePaint
-                    )
+                // Draw lines
+                PoseLandmarker.POSE_LANDMARKS.forEach { connection ->
+                    // Ensure landmarkList is not empty and indices are valid
+                    if (landmarkList.size > connection.start() && landmarkList.size > connection.end()) {
+                        val startLm = landmarkList[connection.start()]
+                        val endLm = landmarkList[connection.end()]
+                        canvas.drawLine(
+                                offsetX + startLm.x() * scaledImageWidth, // Apply offsetX
+                                offsetY + startLm.y() * scaledImageHeight, // Apply offsetY
+                                offsetX + endLm.x() * scaledImageWidth,   // Apply offsetX
+                                offsetY + endLm.y() * scaledImageHeight,  // Apply offsetY
+                                linePaint
+                        )
+                    }
                 }
             }
         }
     }
+
+//    override fun draw(canvas: Canvas) {
+//        super.draw(canvas)
+//        results?.let { poseLandmarkerResult ->
+//            for(landmark in poseLandmarkerResult.landmarks()) {
+//                for(normalizedLandmark in landmark) {
+//                    canvas.drawPoint(
+//                            normalizedLandmark.x() * imageWidth * scaleFactor,
+//                            normalizedLandmark.y() * imageHeight * scaleFactor,
+//                            pointPaint
+//                    )
+//                }
+//
+//                PoseLandmarker.POSE_LANDMARKS.forEach {
+//                    canvas.drawLine(
+//                            poseLandmarkerResult.landmarks().get(0).get(it!!.start()).x() * imageWidth * scaleFactor,
+//                            poseLandmarkerResult.landmarks().get(0).get(it.start()).y() * imageHeight * scaleFactor,
+//                            poseLandmarkerResult.landmarks().get(0).get(it.end()).x() * imageWidth * scaleFactor,
+//                            poseLandmarkerResult.landmarks().get(0).get(it.end()).y() * imageHeight * scaleFactor,
+//                            linePaint)
+//                }
+//            }
+//        }
+//    }
 
     fun setResults(
             poseLandmarkerResults: PoseLandmarkerResult,
