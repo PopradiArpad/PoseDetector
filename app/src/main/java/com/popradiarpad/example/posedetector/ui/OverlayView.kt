@@ -19,7 +19,6 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import android.util.AttributeSet
 import android.view.View
 import com.google.mediapipe.tasks.vision.core.RunningMode
 import com.google.mediapipe.tasks.vision.poselandmarker.PoseLandmarker
@@ -42,13 +41,13 @@ class OverlayView(context: Context) :
         initPaints()
     }
 
-//    fun clear() {
-//        results = null
-//        pointPaint.reset()
-//        linePaint.reset()
-//        invalidate()
-//        initPaints()
-//    }
+    fun clear() {
+        results = null
+        pointPaint.reset()
+        linePaint.reset()
+        invalidate()
+        initPaints()
+    }
 
     private fun initPaints() {
         linePaint.color = 0x007F8B
