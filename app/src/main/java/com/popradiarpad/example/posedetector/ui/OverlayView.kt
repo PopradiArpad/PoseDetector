@@ -27,8 +27,8 @@ import com.google.mediapipe.tasks.vision.poselandmarker.PoseLandmarkerResult
 import kotlin.math.max
 import kotlin.math.min
 
-class OverlayView(context: Context?, attrs: AttributeSet?) :
-    View(context, attrs) {
+class OverlayView(context: Context) :
+    View(context) {
 
     private var results: PoseLandmarkerResult? = null
     private var pointPaint = Paint()
@@ -42,13 +42,13 @@ class OverlayView(context: Context?, attrs: AttributeSet?) :
         initPaints()
     }
 
-    fun clear() {
-        results = null
-        pointPaint.reset()
-        linePaint.reset()
-        invalidate()
-        initPaints()
-    }
+//    fun clear() {
+//        results = null
+//        pointPaint.reset()
+//        linePaint.reset()
+//        invalidate()
+//        initPaints()
+//    }
 
     private fun initPaints() {
         linePaint.color = 0x007F8B

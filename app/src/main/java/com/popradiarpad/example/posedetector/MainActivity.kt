@@ -7,6 +7,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels // Added import
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -18,15 +19,22 @@ import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
 import com.popradiarpad.example.posedetector.ui.screen.HomeScreen
 import com.popradiarpad.example.posedetector.ui.screen.PoseScreen
+import com.popradiarpad.example.posedetector.ui.screen.PoseViewModel // Added import
 import com.popradiarpad.example.posedetector.ui.theme.PoseDetectorTheme
 
 class MainActivity : ComponentActivity() {
     private val cameraPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { }
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { /* Optionally handle if permission is denied */ }
+
+    private val poseViewModel: PoseViewModel by viewModels() // Get ViewModel instance
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        // Initialize the camera via the ViewModel
+        poseViewModel.initializeCamera(this)
+
         setContent {
             PoseDetectorTheme {
                 var showPose by remember { mutableStateOf(false) }
@@ -43,7 +51,11 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     } else {
-                        PoseScreen(modifier = modifier) {
+                        // Pass the ViewModel to PoseScreen
+                        PoseScreen(
+                            modifier = modifier,
+                            poseViewModel = poseViewModel // Added parameter
+                        ) {
                             showPose = false
                         }
                     }
@@ -53,16 +65,21 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun ensureCameraPermission(onGranted: () -> Unit) {
-        if (ContextCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.CAMERA
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            onGranted()
-        } else {
-            cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+        when {
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.CAMERA
+            ) == PackageManager.PERMISSION_GRANTED -> {
+                onGranted()
+            }
+            shouldShowRequestPermissionRationale(Manifest.permission.CAMERA) -> {
+                // Optionally show a rationale to the user if they\'ve previously denied the permission
+                // For now, just request again or guide them to settings
+                cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+            }
+            else -> {
+                cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+            }
         }
     }
 }
-
-
