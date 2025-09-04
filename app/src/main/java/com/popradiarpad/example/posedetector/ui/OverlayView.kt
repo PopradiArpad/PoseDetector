@@ -90,49 +90,48 @@ class OverlayView(context: Context?) :
     // the bottom of this file.
     override fun draw(canvas: Canvas) {
         super.draw(canvas)
-        results?.let { poseLandmarkerResult ->
-            // Check if there are any landmarks to draw
-            if (poseLandmarkerResult.landmarks().isEmpty()) {
-                return@let
+
+        val poseLandmarkerResult = results ?: return
+        // Check if there are any landmarks to draw
+        if (poseLandmarkerResult.landmarks().isEmpty()) return
+
+
+        // Calculate the scaled image dimensions
+        // These are the dimensions of the full image if it were scaled by scaleFactor
+        val scaledImageWidth = imageWidth * scaleFactor
+        val scaledImageHeight = imageHeight * scaleFactor
+
+        // Calculate the offset of the scaled image within the view
+        // This centers the scaled image within the OverlayView bounds
+        val offsetX = (width - scaledImageWidth) / 2f
+        val offsetY = (height - scaledImageHeight) / 2f
+
+        // The result bundle provides a list of PoseLandmarkerResult, but for live stream, we usually expect one.
+        // And PoseLandmarkerResult contains a list of landmark lists (one list per detected pose).
+        // Typically, for single pose detection, landmarks().get(0) is used.
+        for (landmarkList in poseLandmarkerResult.landmarks()) { // Iterate over each detected pose
+            // Draw landmarks
+            for (normalizedLandmark in landmarkList) {
+                canvas.drawPoint(
+                        offsetX + normalizedLandmark.x() * scaledImageWidth, // Apply offsetX
+                        offsetY + normalizedLandmark.y() * scaledImageHeight, // Apply offsetY
+                        pointPaint
+                )
             }
 
-            // Calculate the scaled image dimensions
-            // These are the dimensions of the full image if it were scaled by scaleFactor
-            val scaledImageWidth = imageWidth * scaleFactor
-            val scaledImageHeight = imageHeight * scaleFactor
-
-            // Calculate the offset of the scaled image within the view
-            // This centers the scaled image within the OverlayView bounds
-            val offsetX = (width - scaledImageWidth) / 2f
-            val offsetY = (height - scaledImageHeight) / 2f
-
-            // The result bundle provides a list of PoseLandmarkerResult, but for live stream, we usually expect one.
-            // And PoseLandmarkerResult contains a list of landmark lists (one list per detected pose).
-            // Typically, for single pose detection, landmarks().get(0) is used.
-            for (landmarkList in poseLandmarkerResult.landmarks()) { // Iterate over each detected pose
-                // Draw landmarks
-                for (normalizedLandmark in landmarkList) {
-                    canvas.drawPoint(
-                            offsetX + normalizedLandmark.x() * scaledImageWidth, // Apply offsetX
-                            offsetY + normalizedLandmark.y() * scaledImageHeight, // Apply offsetY
-                            pointPaint
+            // Draw lines
+            PoseLandmarker.POSE_LANDMARKS.forEach { connection ->
+                // Ensure landmarkList is not empty and indices are valid
+                if (landmarkList.size > connection.start() && landmarkList.size > connection.end()) {
+                    val startLm = landmarkList[connection.start()]
+                    val endLm = landmarkList[connection.end()]
+                    canvas.drawLine(
+                            offsetX + startLm.x() * scaledImageWidth, // Apply offsetX
+                            offsetY + startLm.y() * scaledImageHeight, // Apply offsetY
+                            offsetX + endLm.x() * scaledImageWidth,   // Apply offsetX
+                            offsetY + endLm.y() * scaledImageHeight,  // Apply offsetY
+                            linePaint
                     )
-                }
-
-                // Draw lines
-                PoseLandmarker.POSE_LANDMARKS.forEach { connection ->
-                    // Ensure landmarkList is not empty and indices are valid
-                    if (landmarkList.size > connection.start() && landmarkList.size > connection.end()) {
-                        val startLm = landmarkList[connection.start()]
-                        val endLm = landmarkList[connection.end()]
-                        canvas.drawLine(
-                                offsetX + startLm.x() * scaledImageWidth, // Apply offsetX
-                                offsetY + startLm.y() * scaledImageHeight, // Apply offsetY
-                                offsetX + endLm.x() * scaledImageWidth,   // Apply offsetX
-                                offsetY + endLm.y() * scaledImageHeight,  // Apply offsetY
-                                linePaint
-                        )
-                    }
                 }
             }
         }
