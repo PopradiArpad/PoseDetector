@@ -36,6 +36,7 @@ class PoseLandmarkerHelper(
         var minPoseDetectionConfidence: Float = DEFAULT_POSE_DETECTION_CONFIDENCE,
         var minPoseTrackingConfidence: Float = DEFAULT_POSE_TRACKING_CONFIDENCE,
         var minPosePresenceConfidence: Float = DEFAULT_POSE_PRESENCE_CONFIDENCE,
+        var numPoses: Int = DEFAULT_NUM_POSES,
         var currentModel: Int = MODEL_POSE_LANDMARKER_FULL,
         var currentDelegate: Int = DELEGATE_GPU,
         var runningMode: RunningMode = RunningMode.LIVE_STREAM,
@@ -116,6 +117,7 @@ class PoseLandmarkerHelper(
                     .setMinTrackingConfidence(minPoseTrackingConfidence)
                     .setMinPosePresenceConfidence(minPosePresenceConfidence)
                     .setRunningMode(runningMode)
+                    .setNumPoses(numPoses)
 
             // The ResultListener and ErrorListener only use for LIVE_STREAM mode.
             if (runningMode == RunningMode.LIVE_STREAM) {
@@ -375,7 +377,7 @@ class PoseLandmarkerHelper(
         const val DEFAULT_POSE_DETECTION_CONFIDENCE = 0.5F
         const val DEFAULT_POSE_TRACKING_CONFIDENCE = 0.5F
         const val DEFAULT_POSE_PRESENCE_CONFIDENCE = 0.5F
-        const val DEFAULT_NUM_POSES = 1
+        const val DEFAULT_NUM_POSES = 2
         const val OTHER_ERROR = 0
         const val GPU_ERROR = 1
         const val MODEL_POSE_LANDMARKER_FULL = 0
