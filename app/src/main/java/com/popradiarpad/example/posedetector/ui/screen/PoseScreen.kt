@@ -5,6 +5,7 @@ import androidx.camera.view.PreviewView
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -116,19 +117,17 @@ fun PoseScreenInternal(
             AndroidView(factory = { previewView }, modifier = Modifier.fillMaxSize())
         }
 
-        // OverlayView can still be part of the preview, as it's a custom View
         AndroidView(factory = { overlayView }, modifier = Modifier.fillMaxSize())
 
         Box(
                 modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.BottomCenter
+                contentAlignment = Alignment.BottomEnd
         ) {
             Button(
                     onClick = onFinish,
                     modifier = Modifier
                         .padding(16.dp)
-//                        .fillMaxWidth()
-//                        .height(56.dp)
+                        .height(56.dp)
             ) { Text("Finish") }
         }
     }
@@ -144,16 +143,15 @@ fun PoseScreenInternal(
 )
 @Composable
 private fun PoseScreenInternalPreview() {
-    // It's good practice to wrap previews in your app's theme if you have one
     PoseDetectorTheme {
         PoseScreenInternal(
                 modifier = Modifier.fillMaxSize(),
-                cameraReady = true, // Simulate camera being ready
-                resultBundle = null, // No results for basic UI preview
+                cameraReady = true,
+                resultBundle = null,
                 runningMode = RunningMode.LIVE_STREAM,
-                onStartCameraRequest = { _, _ -> println("Preview: Start camera requested") },
-                onFinish = { println("Preview: Finish button clicked") },
-                isComposePreview = true // Indicate it's for Compose Preview
+                onStartCameraRequest = { _, _ -> },
+                onFinish = { },
+                isComposePreview = true
         )
     }
 }
