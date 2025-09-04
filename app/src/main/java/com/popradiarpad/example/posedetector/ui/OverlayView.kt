@@ -50,13 +50,13 @@ class OverlayView(context: Context?) :
     }
 
     private fun initPaints() {
-        linePaint.color = 0x007F8B
-        linePaint.strokeWidth = LANDMARK_STROKE_WIDTH
-        linePaint.style = Paint.Style.STROKE
-
         pointPaint.color = Color.YELLOW
         pointPaint.strokeWidth = LANDMARK_STROKE_WIDTH
         pointPaint.style = Paint.Style.FILL
+
+        linePaint.color = Color.RED
+        linePaint.strokeWidth = LANDMARK_STROKE_WIDTH
+        linePaint.style = Paint.Style.STROKE
     }
 
     fun setResults(
