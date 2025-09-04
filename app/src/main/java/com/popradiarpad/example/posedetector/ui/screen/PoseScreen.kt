@@ -5,8 +5,6 @@ import androidx.camera.view.PreviewView
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -129,14 +127,21 @@ fun PoseScreenInternal(
                     onClick = onFinish,
                     modifier = Modifier
                         .padding(16.dp)
-                        .fillMaxWidth()
-                        .height(56.dp)
+//                        .fillMaxWidth()
+//                        .height(56.dp)
             ) { Text("Finish") }
         }
     }
 }
 
-@ComposePreview(showBackground = true, device = "spec:width=360dp,height=640dp")
+@ComposePreview(
+        name = "PoseScreenInternal - Portrait", showBackground = true,
+        device = "spec:width=360dp,height=640dp"
+)
+@ComposePreview(
+        name = "PoseScreenInternal - Landscape", showBackground = true,
+        device = "spec:width=640dp,height=360dp"
+)
 @Composable
 private fun PoseScreenInternalPreview() {
     // It's good practice to wrap previews in your app's theme if you have one
