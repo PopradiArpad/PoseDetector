@@ -174,7 +174,13 @@ class PoseLandmarkerHelper(
         imageProxy.close()
 
         val matrix = Matrix().apply {
-            // Rotate the frame received from the camera to be in the same direction as it'll be shown
+            // Rotate the frame received from the camera to be in the same direction as it'll be shown.
+            // This is needed to match camera coordinate system to user's coordinate system.
+            // In this matching only the directions are important: that's why
+            // imageProxy.imageInfo.rotationDegrees can only be 90, 0, 180, 270
+            // Keeping a Redmi Note 14 tall in hand is 90 rotation degree.
+            // WRONG NAMING: THIS IS NOT TO DEVICE ROTATION BUT TO USER ROTATION
+            // THE CAMERA IS FIX ON THE DEVICE, SO IT CAN NOT BE RELATIVE TO THAT.
             postRotate(imageProxy.imageInfo.rotationDegrees.toFloat())
 
             // flip image if user use front camera
