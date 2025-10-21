@@ -21,3 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "PoseDetector"
 include(":app")
+
+includeBuild("PoseDetectorKMP")
