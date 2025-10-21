@@ -72,39 +72,40 @@ class PoseLandmarkerHelper(
         // Set general pose landmarker options
         val baseOptionBuilder = BaseOptions.builder()
 
-        // Use the specified hardware for running the model. Default to CPU
+        // Use the specified hardware for running the model.
         when (currentDelegate) {
             DELEGATE_CPU -> {
                 baseOptionBuilder.setDelegate(Delegate.CPU)
             }
-
             DELEGATE_GPU -> {
                 baseOptionBuilder.setDelegate(Delegate.GPU)
             }
         }
 
         Log.d(TAG, "Reading task file")
-        val modelBuffer: ByteArray =
-            runBlocking {
-                val path = when (currentModel) {
-                    MODEL_POSE_LANDMARKER_FULL -> "pose_landmarker_full.task"
-                    MODEL_POSE_LANDMARKER_LITE -> "pose_landmarker_lite.task"
-                    MODEL_POSE_LANDMARKER_HEAVY -> "pose_landmarker_heavy.task"
-                    else -> "pose_landmarker_full.task"
-                }
-
-                Res.readBytes("files/$path")
+        val modelBytes = runBlocking {
+            val path = when (currentModel) {
+                MODEL_POSE_LANDMARKER_FULL -> "pose_landmarker_full.task"
+                MODEL_POSE_LANDMARKER_LITE -> "pose_landmarker_lite.task"
+                MODEL_POSE_LANDMARKER_HEAVY -> "pose_landmarker_heavy.task"
+                else -> "pose_landmarker_full.task"
             }
+            Res.readBytes("files/$path")
+        }
 
-        baseOptionBuilder.setModelAssetBuffer(ByteBuffer.wrap(modelBuffer))
-        Log.d(TAG, "setModelAssetBuffer set")
+        // Create a direct ByteBuffer and copy the model bytes into it.
+        val modelBuffer = ByteBuffer.allocateDirect(modelBytes.size)
+        modelBuffer.put(modelBytes)
+
+        baseOptionBuilder.setModelAssetBuffer(modelBuffer)
+
 
         // Check if runningMode is consistent with poseLandmarkerHelperListener
         when (runningMode) {
             RunningMode.LIVE_STREAM -> {
                 if (poseLandmarkerHelperListener == null) {
                     throw IllegalStateException(
-                        "poseLandmarkerHelperListener must be set when runningMode is LIVE_STREAM."
+                            "poseLandmarkerHelperListener must be set when runningMode is LIVE_STREAM."
                     )
                 }
             }
@@ -114,7 +115,6 @@ class PoseLandmarkerHelper(
             }
         }
 
-        Log.d(TAG, "try 0")
         try {
             val baseOptions = baseOptionBuilder.build()
             // Create an option builder with base options and specific
@@ -385,10 +385,10 @@ class PoseLandmarkerHelper(
     }
 
     data class ResultBundle(
-        val results: List<PoseLandmarkerResult>,
-        val inferenceTime: Long,
-        val inputImageHeight: Int,
-        val inputImageWidth: Int,
+            val results: List<PoseLandmarkerResult>,
+            val inferenceTime: Long,
+            val inputImageHeight: Int,
+            val inputImageWidth: Int,
     )
 
     interface LandmarkerListener {
