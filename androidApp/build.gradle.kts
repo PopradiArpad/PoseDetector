@@ -23,7 +23,7 @@ android {
     }
 
     kotlinOptions {
-        πjvmTarget = "11"
+        jvmTarget = "11"
     }
     packaging {
         resources {
