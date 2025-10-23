@@ -13,7 +13,6 @@ composeBom = "2025.10.00"
 tasksVision = "0.10.26.1"
 
 # Added for ViewModel and Preview
-lifecycleViewmodelKtx = "2.9.3"
 uiTooling = "1.7.0-beta02"
 
 [libraries]
