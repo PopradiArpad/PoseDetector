@@ -23,7 +23,7 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = "11"
+        πjvmTarget = "11"
     }
     packaging {
         resources {
@@ -35,7 +35,6 @@ android {
 dependencies {
     implementation(project(":shared"))
     implementation(libs.androidx.activity.compose)
-    implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
