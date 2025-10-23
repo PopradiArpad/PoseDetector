@@ -29,7 +29,7 @@ android {
             jvmTarget = JvmTarget.JVM_11
         }
     }
-π
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
