@@ -1,5 +1,5 @@
 [versions]
-agp = "8.12.2"
+agp = "8.13.0"
 android-library = "8.4.1"
 kotlin = "2.2.20"
 compose-plugin = "1.9.1"
@@ -34,7 +34,6 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 tasks-vision = { module = "com.google.mediapipe:tasks-vision", version.ref = "tasksVision" }
 
 # Added for ViewModel and Preview
-androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "uiTooling" }
 
 [plugins]
