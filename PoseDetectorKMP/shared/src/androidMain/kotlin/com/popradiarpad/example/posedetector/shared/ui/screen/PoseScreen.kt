@@ -3,6 +3,7 @@ package com.popradiarpad.example.posedetector.shared.ui.screen
 import androidx.camera.core.Preview
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -23,42 +24,57 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.mediapipe.tasks.vision.core.RunningMode
 import com.popradiarpad.example.posedetector.shared.PoseLandmarkerHelper
 import com.popradiarpad.example.posedetector.shared.ui.OverlayView
-import com.popradiarpad.example.posedetector.shared.ui.theme.PoseDetectorTheme
+import com.popradiarpad.example.posedetector.shared.ui.theme.AppTheme
 import androidx.compose.ui.tooling.preview.Preview as ComposePreview
 
 @Composable
-fun PoseScreen(
-        modifier: Modifier = Modifier,
-        poseViewModel: PoseViewModel,
-        onFinish: () -> Unit
+actual fun LivePoseLandmarkerScreen(
+    modifier: Modifier,
+    onFinish: () -> Unit
+) {
+    val poseViewModel: PoseViewModel = viewModel()
+    
+    PoseScreen(
+        modifier = modifier,
+        poseViewModel = poseViewModel,
+        onFinish = onFinish
+    )
+}
+
+@Composable
+private fun PoseScreen(
+    modifier: Modifier = Modifier,
+    poseViewModel: PoseViewModel,
+    onFinish: () -> Unit
 ) {
     val cameraReady by poseViewModel.cameraProviderReady.collectAsState()
     val resultBundle by poseViewModel.poseLandmarkerResultBundle.collectAsState()
 
     PoseScreenInternal(
-            modifier = modifier,
-            cameraReady = cameraReady,
-            resultBundle = resultBundle,
-            runningMode = poseViewModel.runningMode,
-            onStartCameraRequest = { lifecycleOwner, surfaceProvider ->
-                poseViewModel.startCamera(lifecycleOwner, surfaceProvider)
-            },
-            onFinish = onFinish
+        modifier = modifier,
+        cameraReady = cameraReady,
+        resultBundle = resultBundle,
+        runningMode = poseViewModel.runningMode,
+        onStartCameraRequest = { lifecycleOwner, surfaceProvider ->
+            poseViewModel.startCamera(lifecycleOwner, surfaceProvider)
+        },
+        onFinish = onFinish
     )
 }
 
 @Composable
 fun PoseScreenInternal(
-        modifier: Modifier = Modifier,
-        cameraReady: Boolean,
-        resultBundle: PoseLandmarkerHelper.ResultBundle?,
-        runningMode: RunningMode,
-        onStartCameraRequest: (lifecycleOwner: LifecycleOwner, surfaceProvider: Preview.SurfaceProvider) -> Unit,
-        onFinish: () -> Unit,
-        isComposePreview: Boolean = false // Flag to handle AndroidView differently in preview
+    modifier: Modifier = Modifier,
+    cameraReady: Boolean,
+    resultBundle: PoseLandmarkerHelper.ResultBundle?,
+    runningMode: RunningMode,
+    onStartCameraRequest: (lifecycleOwner: LifecycleOwner, surfaceProvider: Preview.SurfaceProvider) -> Unit,
+    onFinish: () -> Unit,
+    isComposePreview: Boolean = false // Flag to handle AndroidView differently in preview
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -90,10 +106,10 @@ fun PoseScreenInternal(
         resultBundle?.let { bundle ->
             if (bundle.results.isNotEmpty()) {
                 overlayView.setResults(
-                        bundle.results.first(), // Assuming live stream, so one result per bundle
-                        bundle.inputImageHeight,
-                        bundle.inputImageWidth,
-                        runningMode
+                    bundle.results.first(), // Assuming live stream, so one result per bundle
+                    bundle.inputImageHeight,
+                    bundle.inputImageWidth,
+                    runningMode
                 )
             } else {
                 overlayView.clear()
@@ -106,9 +122,9 @@ fun PoseScreenInternal(
     Box(modifier = modifier) {
         if (isComposePreview) {
             Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.Gray) // Placeholder for PreviewView
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Gray) // Placeholder for PreviewView
             ) {
                 Text("Camera Preview Area", Modifier.align(Alignment.Center))
             }
@@ -119,38 +135,38 @@ fun PoseScreenInternal(
         AndroidView(factory = { overlayView }, modifier = Modifier.fillMaxSize())
 
         Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.BottomEnd
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.BottomEnd
         ) {
             Button(
-                    onClick = onFinish,
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .height(56.dp)
+                onClick = onFinish,
+                modifier = Modifier
+                    .padding(16.dp)
+                    .height(56.dp)
             ) { Text("Finish") }
         }
     }
 }
 
 @ComposePreview(
-        name = "PoseScreenInternal - Portrait", showBackground = true,
-        device = "spec:width=360dp,height=640dp"
+    name = "PoseScreenInternal - Portrait", showBackground = true,
+    device = "spec:width=360dp,height=640dp"
 )
 @ComposePreview(
-        name = "PoseScreenInternal - Landscape", showBackground = true,
-        device = "spec:width=640dp,height=360dp"
+    name = "PoseScreenInternal - Landscape", showBackground = true,
+    device = "spec:width=640dp,height=360dp"
 )
 @Composable
 private fun PoseScreenInternalPreview() {
-    PoseDetectorTheme {
+    AppTheme(darkTheme = isSystemInDarkTheme(), dynamicColor = false) {
         PoseScreenInternal(
-                modifier = Modifier.fillMaxSize(),
-                cameraReady = true,
-                resultBundle = null,
-                runningMode = RunningMode.LIVE_STREAM,
-                onStartCameraRequest = { _, _ -> },
-                onFinish = { },
-                isComposePreview = true
+            modifier = Modifier.fillMaxSize(),
+            cameraReady = true,
+            resultBundle = null,
+            runningMode = RunningMode.LIVE_STREAM,
+            onStartCameraRequest = { _, _ -> },
+            onFinish = { },
+            isComposePreview = true
         )
     }
 }

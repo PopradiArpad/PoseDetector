@@ -8,18 +8,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
-import com.popradiarpad.example.posedetector.android.ui.screen.HomeScreen
-import com.popradiarpad.example.posedetector.shared.ui.theme.PoseDetectorTheme
-import com.popradiarpad.example.posedetector.shared.ui.screen.PoseScreen
+import com.popradiarpad.example.posedetector.shared.ui.App
 import com.popradiarpad.example.posedetector.shared.ui.screen.PoseViewModel
 
 class MainActivity : ComponentActivity() {
@@ -32,27 +22,7 @@ class MainActivity : ComponentActivity() {
         poseViewModel.initialize(this)
 
         setContent {
-            PoseDetectorTheme {
-                var showPose by remember { mutableStateOf(false) }
-
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    val modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding)
-
-                    if (!showPose) {
-                        HomeScreen(modifier = modifier) {
-                            ensureCameraPermission { showPose = true }
-                        }
-                    } else {
-                        PoseScreen(
-                                modifier = modifier,
-                                poseViewModel = poseViewModel,
-                                onFinish = { showPose = false }
-                        )
-                    }
-                }
-            }
+            App(ensureCameraPermission = ::ensureCameraPermission)
         }
     }
 
