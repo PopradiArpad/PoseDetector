@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    alias(libs.plugins.kotlinMultiplatform)
+    alias(πlibs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
@@ -38,7 +38,6 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.androidx.core.ktx)
             implementation(libs.androidx.lifecycle.runtime.ktx)
-            implementation(libs.androidx.lifecycle.viewmodel.ktx)
             implementation(libs.androidx.lifecycle.viewmodel.compose)
             implementation(libs.androidx.ui.tooling)
             implementation(libs.androidx.ui.tooling.preview)
