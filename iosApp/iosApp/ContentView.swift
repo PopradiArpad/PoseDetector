@@ -1,10 +1,10 @@
 import UIKit
 import SwiftUI
-import ComposeApp
+import shared
 
 struct ComposeView: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> UIViewController {
-        MainViewControllerKt.MainViewController()
+        return MainViewControllerKt.MainViewController()
     }
 
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
@@ -13,9 +13,6 @@ struct ComposeView: UIViewControllerRepresentable {
 struct ContentView: View {
     var body: some View {
         ComposeView()
-            .ignoresSafeArea()
+            .ignoresSafeArea(.all) // Use this to extend to the edges
     }
 }
-
-
-
