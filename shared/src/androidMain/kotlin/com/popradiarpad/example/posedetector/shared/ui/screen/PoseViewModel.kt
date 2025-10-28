@@ -26,6 +26,8 @@ import kotlin.coroutines.resumeWithException
 
 class PoseViewModel : ViewModel() {
 
+    private var initialized = false
+
     private val _cameraProviderReady = MutableStateFlow(false)
     val cameraProviderReady: StateFlow<Boolean> = _cameraProviderReady
 
@@ -44,7 +46,7 @@ class PoseViewModel : ViewModel() {
 
     private val landmarkerListener = object : PoseLandmarkerHelper.LandmarkerListener {
         override fun onResults(resultBundle: PoseLandmarkerHelper.ResultBundle) {
-            Log.d("PoseViewModel", "SUCCESS: Received new landmark results.")
+            // Log.d("PoseViewModel", "SUCCESS: Received new landmark results.")
             _poseLandmarkerResultBundle.value = resultBundle
         }
 
@@ -54,14 +56,17 @@ class PoseViewModel : ViewModel() {
         }
     }
 
-    fun initialize(context: Context) {
+    fun initializeIfNeeded(context: Context) {
+        if (initialized) return
+
         cameraExecutor = Executors.newSingleThreadExecutor()
         viewModelScope.launch {
             try {
                 cameraProvider = ProcessCameraProvider.getInstance(context).awaitInternal()
                 _cameraProviderReady.value = true
-                Log.d("PoseViewModel", "CameraProvider initialized")
                 initializePoseLandmarker(context.applicationContext)
+                Log.d("PoseViewModel", "CameraProvider initialized")
+                initialized = true
             } catch (e: Exception) {
                 Log.e("PoseViewModel", "Error initializing ViewModel: ${e.message}", e)
             }

@@ -70,15 +70,15 @@ actual fun LivePoseLandmarkerScreen(
     }
 
     if (hasPermission) {
-        Log.d("LivePoseLandmarkerScreen", "show PoseScreen")
         val poseViewModel: PoseViewModel = viewModel()
+        poseViewModel.initializeIfNeeded(context)
+
         PoseScreen(
             modifier = modifier,
             poseViewModel = poseViewModel,
             onFinish = onFinish
         )
     } else {
-        Log.d("LivePoseLandmarkerScreen", "show need for permission")
         // You can show a rationale or a simple message here.
         Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Text("Camera permission is required to continue.")
@@ -95,7 +95,6 @@ private fun PoseScreen(
     val cameraReady by poseViewModel.cameraProviderReady.collectAsState()
     val resultBundle by poseViewModel.poseLandmarkerResultBundle.collectAsState()
 
-    Log.d("LivePoseLandmarkerScreen", "cameraReady: $cameraReady")
     PoseScreenInternal(
         modifier = modifier,
         cameraReady = cameraReady,
