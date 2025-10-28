@@ -1,12 +1,38 @@
-.idea
+# Android Studio / Gradle
+.gradle/
+.idea/
 *.iml
-.gradle
-.kotlin
 /local.properties
+build/
+*/build/
+.externalNativeBuild/
+.cxx/
+captures/
+
+# Kotlin
+.kotlin/
+
+# macOS
 .DS_Store
-build
-*/build
-/captures
-.externalNativeBuild
-.cxx
-local.properties
+
+# Xcode
+#
+# User-specific files
+*.xcodeproj/project.xcworkspace/
+*.xcodeproj/xcuserdata/
+*.xcworkspace/xcuserdata/
+
+# Playgrounds
+timeline.xctimeline
+playground.xcworkspace
+
+# Swift Package Manager
+#
+# Add this line if you are using Swift Packages
+# .swiftpm/
+# Package.resolved
+
+# Pods - A dependency manager for Swift and Objective-C
+#
+# Add this line if you are using CocoaPods
+# Pods/
