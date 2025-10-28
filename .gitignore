@@ -18,9 +18,9 @@ captures/
 # Xcode
 #
 # User-specific files
-*.xcodeproj/project.xcworkspace/
-*.xcodeproj/xcuserdata/
-*.xcworkspace/xcuserdata/
+iosApp/iosApp.xcodeproj/project.xcworkspace/
+iosApp/iosApp.xcodeproj/xcuserdata/
+iosApp/iosApp.xcworkspace/xcuserdata/
 
 # Playgrounds
 timeline.xctimeline
