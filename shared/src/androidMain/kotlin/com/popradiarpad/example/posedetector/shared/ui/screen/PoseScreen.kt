@@ -95,6 +95,7 @@ private fun PoseScreen(
     val cameraReady by poseViewModel.cameraProviderReady.collectAsState()
     val resultBundle by poseViewModel.poseLandmarkerResultBundle.collectAsState()
 
+    Log.d("LivePoseLandmarkerScreen", "cameraReady: $cameraReady")
     PoseScreenInternal(
         modifier = modifier,
         cameraReady = cameraReady,
