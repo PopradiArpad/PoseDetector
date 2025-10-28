@@ -1,5 +1,10 @@
 package com.popradiarpad.example.posedetector.shared.ui.screen
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.Preview
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.background
@@ -15,13 +20,16 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -36,13 +44,46 @@ actual fun LivePoseLandmarkerScreen(
     modifier: Modifier,
     onFinish: () -> Unit
 ) {
-    val poseViewModel: PoseViewModel = viewModel()
-    
-    PoseScreen(
-        modifier = modifier,
-        poseViewModel = poseViewModel,
-        onFinish = onFinish
+    val context = LocalContext.current
+    var hasPermission by remember {
+        mutableStateOf(
+            ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.CAMERA
+            ) == PackageManager.PERMISSION_GRANTED
+        )
+    }
+
+    Log.d("LivePoseLandmarkerScreen", "hasPermission: $hasPermission")
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { granted ->
+            hasPermission = granted
+        }
     )
+
+    LaunchedEffect(Unit) {
+        if (!hasPermission) {
+            launcher.launch(Manifest.permission.CAMERA)
+        }
+    }
+
+    if (hasPermission) {
+        Log.d("LivePoseLandmarkerScreen", "show PoseScreen")
+        val poseViewModel: PoseViewModel = viewModel()
+        PoseScreen(
+            modifier = modifier,
+            poseViewModel = poseViewModel,
+            onFinish = onFinish
+        )
+    } else {
+        Log.d("LivePoseLandmarkerScreen", "show need for permission")
+        // You can show a rationale or a simple message here.
+        Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Text("Camera permission is required to continue.")
+        }
+    }
 }
 
 @Composable
@@ -67,7 +108,7 @@ private fun PoseScreen(
 }
 
 @Composable
-fun PoseScreenInternal(
+private fun PoseScreenInternal(
     modifier: Modifier = Modifier,
     cameraReady: Boolean,
     resultBundle: PoseLandmarkerHelper.ResultBundle?,
@@ -86,17 +127,12 @@ fun PoseScreenInternal(
         }
     }
 
-    // Only set up camera interaction if not in Compose preview mode,
-    // or if cameraReady is true (which it might be from a fake in a preview)
     if (!isComposePreview) {
         DisposableEffect(lifecycleOwner, previewView, cameraReady) {
             if (cameraReady) {
                 onStartCameraRequest(lifecycleOwner, previewView.surfaceProvider)
             }
-            onDispose {
-                // ViewModel handles camera resource cleanup.
-                // Or, if PoseScreenInternal needs to signal something, add a lambda.
-            }
+            onDispose {}
         }
     }
 
@@ -106,7 +142,7 @@ fun PoseScreenInternal(
         resultBundle?.let { bundle ->
             if (bundle.results.isNotEmpty()) {
                 overlayView.setResults(
-                    bundle.results.first(), // Assuming live stream, so one result per bundle
+                    bundle.results.first(),
                     bundle.inputImageHeight,
                     bundle.inputImageWidth,
                     runningMode
@@ -124,7 +160,7 @@ fun PoseScreenInternal(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.Gray) // Placeholder for PreviewView
+                    .background(Color.Gray)
             ) {
                 Text("Camera Preview Area", Modifier.align(Alignment.Center))
             }

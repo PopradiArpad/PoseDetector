@@ -15,7 +15,7 @@ import com.popradiarpad.example.posedetector.shared.ui.screen.LivePoseLandmarker
 import com.popradiarpad.example.posedetector.shared.ui.theme.AppTheme
 
 @Composable
-fun App(ensureCameraPermission: (onGranted: () -> Unit) -> Unit) {
+fun App() {
     AppTheme(
         darkTheme = isSystemInDarkTheme(),
         dynamicColor = true // This will be ignored on non-Android platforms
@@ -33,9 +33,7 @@ fun App(ensureCameraPermission: (onGranted: () -> Unit) -> Unit) {
                     onFinish = { showPoseScreen = false })
             } else {
                 HomeScreen(modifier = Modifier.fillMaxSize()) {
-                    ensureCameraPermission {
-                        showPoseScreen = true
-                    }
+                    showPoseScreen = true
                 }
             }
         }
