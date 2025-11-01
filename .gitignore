@@ -22,6 +22,9 @@ captures/
 */*.xcodeproj/xcuserdata/
 */*.xcworkspace/xcuserdata/
 
+# CocoaPods
+Pods/
+
 # Playgrounds
 timeline.xctimeline
 playground.xcworkspace
@@ -31,8 +34,3 @@ playground.xcworkspace
 # Add this line if you are using Swift Packages
 # .swiftpm/
 # Package.resolved
-
-# Pods - A dependency manager for Swift and Objective-C
-#
-# Add this line if you are using CocoaPods
-# Pods/
