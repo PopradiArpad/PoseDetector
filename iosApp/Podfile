@@ -4,4 +4,3 @@ use_frameworks!                # REQUIRED for Swift pods
 target 'iosApp' do
   pod 'MediaPipeTasksVision', '0.10.14'
 end
-s
