@@ -15,8 +15,6 @@
 import SwiftUI
 
 struct LivePoseLandmarkerScreenIos: View {
-    var onFinish: () -> Void
-
     @StateObject private var viewModel = CameraViewModel()
     @State private var showingSettingsAlert = false
 
@@ -29,10 +27,6 @@ struct LivePoseLandmarkerScreenIos: View {
             PoseOverlayView(poseLayout: viewModel.overlayView)
                 // fill the entire screen, including safe areas.
                 .ignoresSafeArea(.all, edges: .all)
-
-            Button("Finish") {
-                onFinish()
-            }
 
             // SwiftUI Overlay for UI
             VStack() {

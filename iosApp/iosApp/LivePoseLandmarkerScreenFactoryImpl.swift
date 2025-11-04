@@ -5,8 +5,8 @@ import SwiftUI
 import UIKit
 
 class LivePoseLandmarkerScreenFactoryImpl: LivePoseLandmarkerScreenFactory {
-    func create(onFinish: @escaping () -> Void) -> UIViewController {
-        let swiftUIView = LivePoseLandmarkerScreenIos(onFinish: onFinish)
+    func create() -> UIViewController {
+        let swiftUIView = LivePoseLandmarkerScreenIos()
         let hostingController = UIHostingController(rootView: swiftUIView)
         return hostingController
     }
