@@ -2,5 +2,11 @@ platform :ios, '17.6'          # minimum OS
 use_frameworks!                # REQUIRED for Swift pods
 
 target 'iosApp' do
-  pod 'MediaPipeTasksVision', '0.10.14'
+#     Do not integrate the shared as a pod,
+#     I want that actual shared gets compiled when building on XCode.
+#     That means that the :shared:podInstall generated
+#     shared/shared.podspec won't be used.
+#   pod 'shared', :path => '../shared'
+#  pod 'MediaPipeTasksVision', '0.10.14'
+  pod 'MediaPipeTasksVision', '0.10.18'
 end

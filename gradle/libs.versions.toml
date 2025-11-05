@@ -1,18 +1,18 @@
 [versions]
 agp = "8.13.0"
-android-library = "8.4.1"
-kotlin = "2.2.20"
-compose-plugin = "1.9.1"
-compose-compiler = "2.2.20"
+android-library = "8.4.2"
+kotlin = "2.2.21"
+compose-plugin = "1.9.2"
+compose-compiler = "2.2.21"
 
-cameraCore = "1.4.2"
+cameraCore = "1.5.1"
 coreKtx = "1.17.0"
-lifecycleRuntimeKtx = "2.9.3"
-activityCompose = "1.10.1"
+lifecycleRuntimeKtx = "2.9.4"
+activityCompose = "1.11.0"
 tasksVision = "0.10.26.1"
 
 # Added for ViewModel and Preview
-uiTooling = "1.7.0-beta02"
+uiTooling = "1.9.4"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -40,3 +40,4 @@ kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "compose-compiler" }
+kotlinCocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotlin" }

@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlinCocoapods)
 }
 
 kotlin {
@@ -26,6 +27,27 @@ kotlin {
         target.binaries.framework {
             baseName = "shared"
         }
+    }
+
+    // This is a try to integrate the pod handling into gradle as it'S
+    // recommended in the KMP docs. Unfortunately the direct remote pod
+    // definition doesn't generate the .xcworkspace rendering
+    // the whole process useless. I don't know why it doesn't work.
+    // Give a try later.
+    // Until that manual pod handling without gradle integration :(
+    // pod update workflow quite brutal:
+    // 0. close XCode
+    // 1. delete Podfile.lock
+    // 2. delete .xcworkspace
+    // 3. update Podfile
+    // 4. pod install
+    // 5. Let Android Studio generate XCode stuff
+    // 6. open .xcworkspace
+    cocoapods {
+        version = "1.0"
+        summary = "Shared module for PoseDetector"
+        homepage = "Link to the project homepage"
+        podfile = project.file("../iosApp/Podfile")
     }
 
     sourceSets {
