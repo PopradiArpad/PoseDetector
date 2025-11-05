@@ -17,6 +17,12 @@ actual fun LivePoseLandmarkerBackground(
     )
 }
 
+// We want integrate a SwiftUI component into Composable and
+// iosApp things are not visible from shared (only the other way around)
+// so we need storage which is
+// 1. visible from both world (so it must be defined in shared, here)
+// 2. can be set from iosApp
+// 3. can be read from shared.
 object LivePoseLandmarkerBackgroundFactory {
     lateinit var factory: () -> UIViewController
 }
