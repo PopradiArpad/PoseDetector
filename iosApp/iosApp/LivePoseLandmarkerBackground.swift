@@ -14,7 +14,7 @@
 
 import SwiftUI
 
-struct LivePoseLandmarkerScreenIos: View {
+struct LivePoseLandmarkerBackground: View {
     @StateObject private var viewModel = CameraViewModel()
     @State private var showingSettingsAlert = false
 
