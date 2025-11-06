@@ -1,9 +1,11 @@
 package com.popradiarpad.example.posedetector.shared.ui.screen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -77,11 +79,29 @@ private fun BoxScope.ButtonColumn(
 }
 
 @Composable
-private fun InfoBottomSheet() {
-    Box(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+fun InfoBottomSheet() {
+    Box(
+        modifier = Modifier.fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        InferenceTime()
+    }
+}
+
+@Composable
+private fun InferenceTime() {
+    Row(
+        modifier = Modifier.fillMaxWidth()
+            .padding(top = 16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
         Text(
-            "This is the info content.",
-            modifier = Modifier.padding(top = 48.dp).align(Alignment.Center)
+            "Inference Time",
+            modifier = Modifier.padding(16.dp)
+        )
+        Text(
+            "11.25 ms",
+            modifier = Modifier.padding(16.dp)
         )
     }
 }
