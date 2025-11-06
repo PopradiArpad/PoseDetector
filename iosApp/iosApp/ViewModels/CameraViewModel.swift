@@ -16,6 +16,7 @@ import AVFoundation
 import Combine
 import MediaPipeTasksVision
 import UIKit
+import shared
 
 /**
  It deliveres the camera live stream and the pose landmarker views as UIView like objects.
@@ -235,6 +236,9 @@ extension CameraViewModel: PoseLandmarkerServiceLiveStreamDelegate {
                 imageContentMode: weakSelf.cameraService.videoGravity
                     .contentMode
             )
+            
+            guard let inferenceTime = result?.inferenceTime else { return }
+            InferenceTimeStorage.shared.setInferenceTimeMs(value : inferenceTime)
         }
     }
 }

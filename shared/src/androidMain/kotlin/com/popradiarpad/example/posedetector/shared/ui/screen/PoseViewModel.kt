@@ -13,6 +13,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.mediapipe.tasks.vision.core.RunningMode
 import com.popradiarpad.example.posedetector.shared.PoseLandmarkerHelper
+import com.popradiarpad.example.posedetector.shared.viewmodel.InferenceTimeStorage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -48,6 +49,7 @@ class PoseViewModel : ViewModel() {
         override fun onResults(resultBundle: PoseLandmarkerHelper.ResultBundle) {
             // Log.d("PoseViewModel", "SUCCESS: Received new landmark results.")
             _poseLandmarkerResultBundle.value = resultBundle
+            InferenceTimeStorage.setInferenceTimeMs(resultBundle.inferenceTime.toDouble())
         }
 
         override fun onError(error: String, errorCode: Int) {
