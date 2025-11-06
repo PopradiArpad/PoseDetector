@@ -2,6 +2,7 @@ package com.popradiarpad.example.posedetector.shared.ui.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
@@ -26,19 +27,23 @@ fun LivePoseLandmarkerScreen(
         LivePoseLandmarkerBackground(
             modifier = Modifier.fillMaxSize()
         )
-        IconButton(
-            onClick = onFinish,
-            modifier = Modifier
-                .align(Alignment.BottomStart)
-                .padding(16.dp)
-                .background(MaterialTheme.colorScheme.surface, CircleShape),
-        ) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = "Back",
-                tint = MaterialTheme.colorScheme.onSurface
-            )
-        }
+        BackButton(onFinish)
+    }
+}
+@Composable
+private fun BoxScope.BackButton(onFinish: () -> Unit) {
+    IconButton(
+        onClick = onFinish,
+        modifier = Modifier
+            .align(Alignment.BottomStart)
+            .padding(16.dp)
+            .background(MaterialTheme.colorScheme.surface, CircleShape),
+    ) {
+        Icon(
+            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+            contentDescription = "Back",
+            tint = MaterialTheme.colorScheme.onSurface
+        )
     }
 }
 
