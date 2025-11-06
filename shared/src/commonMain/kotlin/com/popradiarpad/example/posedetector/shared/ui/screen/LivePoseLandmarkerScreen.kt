@@ -17,6 +17,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
@@ -53,15 +54,17 @@ fun LivePoseLandmarkerScreen(
                 modifier = Modifier.fillMaxSize()
             )
 
-            ButtonColumn(
-                onInfo = {
-                    scope.launch {
-                        // No programmatic closing: just swipe down
-                        scaffoldState.bottomSheetState.expand()
-                    }
-                },
-                onFinish = onFinish
-            )
+            if (scaffoldState.bottomSheetState.currentValue != SheetValue.Expanded) {
+                ButtonColumn(
+                    onInfo = {
+                        scope.launch {
+                            // No programmatic closing: just swipe down
+                            scaffoldState.bottomSheetState.expand()
+                        }
+                    },
+                    onFinish = onFinish
+                )
+            }
         }
     }
 }
