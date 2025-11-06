@@ -2,6 +2,7 @@ package com.popradiarpad.example.posedetector.shared.ui.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -39,29 +39,40 @@ fun LivePoseLandmarkerScreen(
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
         sheetPeekHeight = 0.dp, // When closed, nothing to see from the bottom sheet
-        sheetContent = {
-            InfoBottomSheet()
-        }) {
+        sheetContent = { InfoBottomSheet() }) {
         Box(
             modifier = modifier.fillMaxSize(),
         ) {
             LivePoseLandmarkerBackground(
                 modifier = Modifier.fillMaxSize()
             )
-            Column(
-                modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .padding(8.dp),
-            ) {
-                InfoButton(onClick = {
+
+            ButtonColumn(
+                onInfo = {
                     scope.launch {
                         // No programmatic closing: just swipe down
                         scaffoldState.bottomSheetState.expand()
                     }
-                })
-                BackButton(onFinish)
-            }
+                },
+                onFinish = onFinish
+            )
         }
+    }
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+private fun BoxScope.ButtonColumn(
+    onInfo: () -> Unit,
+    onFinish: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .align(Alignment.BottomStart)
+            .padding(8.dp),
+    ) {
+        InfoButton(onClick = onInfo)
+        BackButton(onFinish)
     }
 }
 
