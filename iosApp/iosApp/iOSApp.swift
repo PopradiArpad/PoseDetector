@@ -9,7 +9,7 @@ struct iOSApp: App {
     // but iosApp sees everything from shared.
     init() {
         LivePoseLandmarkerBackgroundFactory.shared.factory = {
-            return UIHostingController(rootView: LivePoseLandmarkerScreenIos())
+            return UIHostingController(rootView: LivePoseLandmarkerBackground())
         }
     }
 
