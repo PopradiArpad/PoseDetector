@@ -153,9 +153,9 @@ expect fun LivePoseLandmarkerBackground(
 )
 
 // This is a platform independent version of String.format("%.2f ms", ...)
-private fun Double.toMilliSecondsString(): String {
+private fun Double.toMilliSecondsString(): String? {
     if (isNaN() || isInfinite()) {
-        return "--"
+        return null
     }
     val hundredths = (this * 100).roundToInt()
     val integerPart = hundredths / 100
