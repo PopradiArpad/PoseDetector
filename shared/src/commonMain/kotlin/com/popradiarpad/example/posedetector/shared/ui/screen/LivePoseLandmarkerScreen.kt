@@ -34,7 +34,6 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.popradiarpad.example.posedetector.shared.viewmodel.InferenceTimeStorage
-import io.github.aakira.napier.Napier
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
@@ -44,7 +43,6 @@ class LivePoseLandmarkerScreen : Screen {
         val navigator = LocalNavigator.currentOrThrow
 
         LivePoseLandmarkerContent(onFinish = {
-            Napier.d("onFinish called, popping navigator")
             navigator.pop()
         })
     }
