@@ -21,7 +21,6 @@ import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,17 +28,35 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.popradiarpad.example.posedetector.shared.viewmodel.InferenceTimeStorage
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
+import com.popradiarpad.example.posedetector.shared.util.LogComposition
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
+object LivePoseLandmarkerScreen : Screen {
+    @Composable
+    override fun Content() {
+        LogComposition(tag = "LivePoseLandmarkerScreen.Content")
+
+        val navigator = LocalNavigator.currentOrThrow
+        LivePoseLandmarkerContent(onFinish = {
+            Napier.d("onFinish called, popping navigator")
+            navigator.pop()
+        })
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LivePoseLandmarkerScreen(
+fun LivePoseLandmarkerContent(
     modifier: Modifier = Modifier,
     onFinish: () -> Unit
 ) {
+    LogComposition(tag = "LivePoseLandmarkerContent")
+
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberBottomSheetScaffoldState()
 
@@ -50,9 +67,9 @@ fun LivePoseLandmarkerScreen(
         Box(
             modifier = modifier.fillMaxSize(),
         ) {
-            LivePoseLandmarkerBackground(
-                modifier = Modifier.fillMaxSize()
-            )
+//            LivePoseLandmarkerBackground(
+//                modifier = Modifier.fillMaxSize()
+//            )
 
             if (scaffoldState.bottomSheetState.currentValue != SheetValue.Expanded) {
                 ButtonColumn(
@@ -87,6 +104,8 @@ private fun BoxScope.ButtonColumn(
 
 @Composable
 fun InfoBottomSheet() {
+    LogComposition(tag = "InfoBottomSheet")
+
     Box(
         modifier = Modifier.fillMaxWidth()
             .padding(16.dp)
@@ -97,6 +116,8 @@ fun InfoBottomSheet() {
 
 @Composable
 private fun InferenceTime() {
+    LogComposition(tag = "InferenceTime")
+
     Row(
         modifier = Modifier.fillMaxWidth()
             .padding(top = 16.dp),
@@ -107,12 +128,12 @@ private fun InferenceTime() {
             modifier = Modifier.padding(16.dp)
         )
 
-        val inferenceTimeMs by InferenceTimeStorage.inferenceTimeMs.collectAsStateWithLifecycle()
-
-        Text(
-            text = inferenceTimeMs?.toMilliSecondsString() ?: "--",
-            modifier = Modifier.padding(16.dp)
-        )
+//        val inferenceTimeMs by InferenceTimeStorage.inferenceTimeMs.collectAsState()
+//
+//        Text(
+//            text = inferenceTimeMs?.toMilliSecondsString() ?: "--",
+//            modifier = Modifier.padding(16.dp)
+//        )
     }
 }
 

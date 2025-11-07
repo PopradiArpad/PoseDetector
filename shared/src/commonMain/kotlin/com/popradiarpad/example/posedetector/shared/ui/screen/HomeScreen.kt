@@ -1,6 +1,7 @@
 package com.popradiarpad.example.posedetector.shared.ui.screen
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
@@ -10,16 +11,27 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 
-@Composable
-fun HomeScreen(modifier: Modifier = Modifier, onStart: () -> Unit) {
-    Box(modifier = modifier, contentAlignment = Alignment.Center) {
-        Button(
-            onClick = onStart, modifier = Modifier
-                .fillMaxWidth(0.8f)
-                .height(72.dp)
+object HomeScreen : Screen {
+    @Composable
+    override fun Content() {
+        val navigator = LocalNavigator.currentOrThrow
+
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
         ) {
-            Text("Start Pose Detection", style = MaterialTheme.typography.titleLarge)
+            Button(
+                onClick = { navigator.push(LivePoseLandmarkerScreen) },
+                modifier = Modifier
+                    .fillMaxWidth(0.8f)
+                    .height(72.dp)
+            ) {
+                Text("Start Pose Detection", style = MaterialTheme.typography.titleLarge)
+            }
         }
     }
 }
