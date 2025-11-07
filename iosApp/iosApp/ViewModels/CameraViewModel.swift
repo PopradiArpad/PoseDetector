@@ -236,8 +236,10 @@ extension CameraViewModel: PoseLandmarkerServiceLiveStreamDelegate {
                 imageContentMode: weakSelf.cameraService.videoGravity
                     .contentMode
             )
-            
+
             guard let inferenceTime = result?.inferenceTime else { return }
+            // Share some inference results with shared view models (here we are in platform-specific)
+            // to feed shared UI.
             InferenceTimeStorage.shared.setInferenceTimeMs(value : inferenceTime)
         }
     }

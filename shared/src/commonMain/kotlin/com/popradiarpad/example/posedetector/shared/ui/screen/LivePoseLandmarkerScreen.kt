@@ -30,16 +30,36 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
+import com.popradiarpad.example.posedetector.shared.util.LogComposition
 import com.popradiarpad.example.posedetector.shared.viewmodel.InferenceTimeStorage
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
+class LivePoseLandmarkerScreen : Screen {
+    @Composable
+    override fun Content() {
+        LogComposition(tag = "LivePoseLandmarkerScreen.Content")
+
+        val navigator = LocalNavigator.currentOrThrow
+        LivePoseLandmarkerContent(onFinish = {
+            Napier.d("onFinish called, popping navigator")
+            navigator.pop()
+        })
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LivePoseLandmarkerScreen(
+fun LivePoseLandmarkerContent(
     modifier: Modifier = Modifier,
     onFinish: () -> Unit
 ) {
+    LogComposition(tag = "LivePoseLandmarkerContent")
+
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberBottomSheetScaffoldState()
 
@@ -87,6 +107,8 @@ private fun BoxScope.ButtonColumn(
 
 @Composable
 fun InfoBottomSheet() {
+    LogComposition(tag = "InfoBottomSheet")
+
     Box(
         modifier = Modifier.fillMaxWidth()
             .padding(16.dp)
@@ -97,6 +119,8 @@ fun InfoBottomSheet() {
 
 @Composable
 private fun InferenceTime() {
+    LogComposition(tag = "InferenceTime")
+
     Row(
         modifier = Modifier.fillMaxWidth()
             .padding(top = 16.dp),

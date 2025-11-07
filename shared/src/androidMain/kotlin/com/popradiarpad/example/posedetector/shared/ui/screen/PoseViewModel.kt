@@ -49,6 +49,8 @@ class PoseViewModel : ViewModel() {
         override fun onResults(resultBundle: PoseLandmarkerHelper.ResultBundle) {
             // Log.d("PoseViewModel", "SUCCESS: Received new landmark results.")
             _poseLandmarkerResultBundle.value = resultBundle
+            // Share some inference results with shared view models (here we are in platform-specific)
+            // to feed shared UI.
             InferenceTimeStorage.setInferenceTimeMs(resultBundle.inferenceTime.toDouble())
         }
 

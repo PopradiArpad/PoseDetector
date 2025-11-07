@@ -8,6 +8,7 @@ struct iOSApp: App {
     // shared doesn't see anything from iosApp,
     // but iosApp sees everything from shared.
     init() {
+        LoggerKt.doInitLogger()
         LivePoseLandmarkerBackgroundFactory.shared.factory = {
             return UIHostingController(rootView: LivePoseLandmarkerBackground())
         }
