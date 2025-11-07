@@ -16,7 +16,7 @@ fun App() {
     ) {
         LogComposition(tag = "App")
 
-        Navigator(screen = HomeScreen) { navigator ->
+        Navigator(screen = HomeScreen()) { navigator ->
             SlideTransition(navigator)
         }
     }

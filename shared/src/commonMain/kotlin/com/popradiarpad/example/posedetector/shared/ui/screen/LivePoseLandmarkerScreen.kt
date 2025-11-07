@@ -36,7 +36,7 @@ import io.github.aakira.napier.Napier
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
-object LivePoseLandmarkerScreen : Screen {
+class LivePoseLandmarkerScreen : Screen {
     @Composable
     override fun Content() {
         LogComposition(tag = "LivePoseLandmarkerScreen.Content")

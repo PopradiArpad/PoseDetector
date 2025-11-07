@@ -15,7 +15,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 
-object HomeScreen : Screen {
+class HomeScreen : Screen {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
@@ -25,7 +25,7 @@ object HomeScreen : Screen {
             contentAlignment = Alignment.Center
         ) {
             Button(
-                onClick = { navigator.push(LivePoseLandmarkerScreen) },
+                onClick = { navigator.push(LivePoseLandmarkerScreen()) },
                 modifier = Modifier
                     .fillMaxWidth(0.8f)
                     .height(72.dp)
