@@ -59,9 +59,6 @@ kotlin {
             implementation(compose.materialIconsExtended)
             implementation(compose.components.resources)
 
-            implementation(libs.voyager.navigator)
-            implementation(libs.voyager.transitions)
-
             implementation(libs.napier)
 
             implementation(libs.decompose)
