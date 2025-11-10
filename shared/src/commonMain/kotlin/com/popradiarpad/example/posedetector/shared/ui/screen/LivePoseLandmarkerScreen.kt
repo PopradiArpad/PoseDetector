@@ -42,141 +42,141 @@ class LivePoseLandmarkerScreen : Screen {
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
 
-        LivePoseLandmarkerContent(onFinish = {
-            navigator.pop()
-        })
+//        LivePoseLandmarkerContent(onFinish = {
+//            navigator.pop()
+//        })
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun LivePoseLandmarkerContent(
-    modifier: Modifier = Modifier,
-    onFinish: () -> Unit
-) {
-    val scope = rememberCoroutineScope()
-    val scaffoldState = rememberBottomSheetScaffoldState()
-
-    BottomSheetScaffold(
-        scaffoldState = scaffoldState,
-        sheetPeekHeight = 0.dp, // When closed, nothing to see from the bottom sheet
-        sheetContent = { InfoBottomSheet() }) {
-        Box(
-            modifier = modifier.fillMaxSize(),
-        ) {
-            LivePoseLandmarkerBackground(
-                modifier = Modifier.fillMaxSize()
-            )
-
-            if (scaffoldState.bottomSheetState.currentValue != SheetValue.Expanded) {
-                ButtonColumn(
-                    onInfo = {
-                        scope.launch {
-                            // No programmatic closing: just swipe down
-                            scaffoldState.bottomSheetState.expand()
-                        }
-                    },
-                    onFinish = onFinish
-                )
-            }
-        }
-    }
-}
-
-@Composable
-@OptIn(ExperimentalMaterial3Api::class)
-private fun BoxScope.ButtonColumn(
-    onInfo: () -> Unit,
-    onFinish: () -> Unit
-) {
-    Column(
-        modifier = Modifier
-            .align(Alignment.BottomStart)
-            .padding(8.dp),
-    ) {
-        InfoButton(onClick = onInfo)
-        BackButton(onFinish)
-    }
-}
-
-@Composable
-fun InfoBottomSheet() {
-    Box(
-        modifier = Modifier.fillMaxWidth()
-            .padding(16.dp)
-    ) {
-        InferenceTime()
-    }
-}
-
-@Composable
-private fun InferenceTime() {
-    Row(
-        modifier = Modifier.fillMaxWidth()
-            .padding(top = 16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(
-            "Inference Time",
-            modifier = Modifier.padding(16.dp)
-        )
-
-        val inferenceTimeMs by InferenceTimeStorage.inferenceTimeMs.collectAsStateWithLifecycle()
-
-        Text(
-            text = inferenceTimeMs?.toMilliSecondsString() ?: "--",
-            modifier = Modifier.padding(16.dp)
-        )
-    }
-}
-
-@Composable
-private fun BackButton(onClick: () -> Unit) {
-    IconButton(
-        onClick = onClick,
-        modifier = Modifier
-            .padding(8.dp)
-            .background(MaterialTheme.colorScheme.surface, CircleShape),
-    ) {
-        Icon(
-            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-            contentDescription = "Back",
-            tint = MaterialTheme.colorScheme.onSurface
-        )
-    }
-}
-
-@Composable
-private fun InfoButton(onClick: () -> Unit) {
-    IconButton(
-        onClick = onClick,
-        modifier = Modifier
-            .padding(8.dp)
-            .background(MaterialTheme.colorScheme.surface, CircleShape),
-    ) {
-        Text(
-            text = "i",
-            color = MaterialTheme.colorScheme.onSurface,
-            fontWeight = FontWeight.Bold,
-            fontStyle = FontStyle.Italic,
-            fontSize = 30.sp
-        )
-    }
-}
-
-@Composable
-expect fun LivePoseLandmarkerBackground(
-    modifier: Modifier,
-)
-
-// This is a platform independent version of String.format("%.2f ms", ...)
-private fun Double.toMilliSecondsString(): String? {
-    if (isNaN() || isInfinite()) {
-        return null
-    }
-    val hundredths = (this * 100).roundToInt()
-    val integerPart = hundredths / 100
-    val fractionalPart = hundredths % 100
-    val fractionalString = if (fractionalPart < 10) "0$fractionalPart" else fractionalPart.toString()
-    return "$integerPart.$fractionalString ms"
-}
+//@OptIn(ExperimentalMaterial3Api::class)
+//@Composable
+//fun LivePoseLandmarkerContent(
+//    modifier: Modifier = Modifier,
+//    onFinish: () -> Unit
+//) {
+//    val scope = rememberCoroutineScope()
+//    val scaffoldState = rememberBottomSheetScaffoldState()
+//
+//    BottomSheetScaffold(
+//        scaffoldState = scaffoldState,
+//        sheetPeekHeight = 0.dp, // When closed, nothing to see from the bottom sheet
+//        sheetContent = { InfoBottomSheet() }) {
+//        Box(
+//            modifier = modifier.fillMaxSize(),
+//        ) {
+//            LivePoseLandmarkerBackground(
+//                modifier = Modifier.fillMaxSize()
+//            )
+//
+//            if (scaffoldState.bottomSheetState.currentValue != SheetValue.Expanded) {
+//                ButtonColumn(
+//                    onInfo = {
+//                        scope.launch {
+//                            // No programmatic closing: just swipe down
+//                            scaffoldState.bottomSheetState.expand()
+//                        }
+//                    },
+//                    onFinish = onFinish
+//                )
+//            }
+//        }
+//    }
+//}
+//
+//@Composable
+//@OptIn(ExperimentalMaterial3Api::class)
+//private fun BoxScope.ButtonColumn(
+//    onInfo: () -> Unit,
+//    onFinish: () -> Unit
+//) {
+//    Column(
+//        modifier = Modifier
+//            .align(Alignment.BottomStart)
+//            .padding(8.dp),
+//    ) {
+//        InfoButton(onClick = onInfo)
+//        BackButton(onFinish)
+//    }
+//}
+//
+//@Composable
+//fun InfoBottomSheet() {
+//    Box(
+//        modifier = Modifier.fillMaxWidth()
+//            .padding(16.dp)
+//    ) {
+//        InferenceTime()
+//    }
+//}
+//
+//@Composable
+//private fun InferenceTime() {
+//    Row(
+//        modifier = Modifier.fillMaxWidth()
+//            .padding(top = 16.dp),
+//        horizontalArrangement = Arrangement.SpaceBetween
+//    ) {
+//        Text(
+//            "Inference Time",
+//            modifier = Modifier.padding(16.dp)
+//        )
+//
+//        val inferenceTimeMs by InferenceTimeStorage.inferenceTimeMs.collectAsStateWithLifecycle()
+//
+//        Text(
+//            text = inferenceTimeMs?.toMilliSecondsString() ?: "--",
+//            modifier = Modifier.padding(16.dp)
+//        )
+//    }
+//}
+//
+//@Composable
+//private fun BackButton(onClick: () -> Unit) {
+//    IconButton(
+//        onClick = onClick,
+//        modifier = Modifier
+//            .padding(8.dp)
+//            .background(MaterialTheme.colorScheme.surface, CircleShape),
+//    ) {
+//        Icon(
+//            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+//            contentDescription = "Back",
+//            tint = MaterialTheme.colorScheme.onSurface
+//        )
+//    }
+//}
+//
+//@Composable
+//private fun InfoButton(onClick: () -> Unit) {
+//    IconButton(
+//        onClick = onClick,
+//        modifier = Modifier
+//            .padding(8.dp)
+//            .background(MaterialTheme.colorScheme.surface, CircleShape),
+//    ) {
+//        Text(
+//            text = "i",
+//            color = MaterialTheme.colorScheme.onSurface,
+//            fontWeight = FontWeight.Bold,
+//            fontStyle = FontStyle.Italic,
+//            fontSize = 30.sp
+//        )
+//    }
+//}
+//
+//@Composable
+//expect fun LivePoseLandmarkerBackground(
+//    modifier: Modifier,
+//)
+//
+//// This is a platform independent version of String.format("%.2f ms", ...)
+//private fun Double.toMilliSecondsString(): String? {
+//    if (isNaN() || isInfinite()) {
+//        return null
+//    }
+//    val hundredths = (this * 100).roundToInt()
+//    val integerPart = hundredths / 100
+//    val fractionalPart = hundredths % 100
+//    val fractionalString = if (fractionalPart < 10) "0$fractionalPart" else fractionalPart.toString()
+//    return "$integerPart.$fractionalString ms"
+//}
