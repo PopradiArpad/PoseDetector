@@ -11,27 +11,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
+import com.popradiarpad.example.posedetector.shared.ui.component.HomeComponent
 
-class HomeScreen : Screen {
-    @Composable
-    override fun Content() {
-        val navigator = LocalNavigator.currentOrThrow
-
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
+@Composable
+fun HomeScreen(component: HomeComponent) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Button(
+            onClick = component::onStartPoseDetectionClick,
+            modifier = Modifier
+                .fillMaxWidth(0.8f)
+                .height(72.dp)
         ) {
-            Button(
-                onClick = { navigator.push(LivePoseLandmarkerScreen()) },
-                modifier = Modifier
-                    .fillMaxWidth(0.8f)
-                    .height(72.dp)
-            ) {
-                Text("Start Pose Detection", style = MaterialTheme.typography.titleLarge)
-            }
+            Text("Start Pose Detection", style = MaterialTheme.typography.titleLarge)
         }
     }
 }

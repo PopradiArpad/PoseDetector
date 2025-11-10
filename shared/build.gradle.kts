@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlinCocoapods)
+    alias(libs.plugins.kotlinSerialization)
 }
 
 kotlin {
@@ -58,10 +59,10 @@ kotlin {
             implementation(compose.materialIconsExtended)
             implementation(compose.components.resources)
 
-            implementation(libs.voyager.navigator)
-            implementation(libs.voyager.transitions)
-
             implementation(libs.napier)
+
+            implementation(libs.decompose)
+            implementation(libs.decompose.extension.compose)
         }
         androidMain.dependencies {
             implementation(libs.androidx.core.ktx)

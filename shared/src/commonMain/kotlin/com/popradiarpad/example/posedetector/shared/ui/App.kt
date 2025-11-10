@@ -1,23 +1,28 @@
 package com.popradiarpad.example.posedetector.shared.ui
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
-import cafe.adriel.voyager.navigator.Navigator
-import cafe.adriel.voyager.transitions.SlideTransition
+import com.arkivanov.decompose.extensions.compose.stack.Children
+import com.arkivanov.decompose.extensions.compose.stack.animation.slide
+import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
+import com.popradiarpad.example.posedetector.shared.ui.component.RootComponent
 import com.popradiarpad.example.posedetector.shared.ui.screen.HomeScreen
+import com.popradiarpad.example.posedetector.shared.ui.screen.LivePoseLandmarkerScreen
 import com.popradiarpad.example.posedetector.shared.ui.theme.AppTheme
-import com.popradiarpad.example.posedetector.shared.util.LogComposition
 
 @Composable
-fun App() {
+fun App(root: RootComponent) {
     AppTheme(
-        darkTheme = isSystemInDarkTheme(),
-        dynamicColor = true // This will be ignored on non-Android platforms
+        darkTheme = false,
+        dynamicColor = false
     ) {
-        LogComposition(tag = "App")
-
-        Navigator(screen = HomeScreen()) { navigator ->
-            SlideTransition(navigator)
+        Children(
+            stack = root.childStack,
+            animation = stackAnimation(slide())
+        ) {
+            when (val child = it.instance) {
+                is RootComponent.Child.Home -> HomeScreen(child.component)
+                is RootComponent.Child.LivePoseLandmarker -> LivePoseLandmarkerScreen(child.component)
+            }
         }
     }
 }
