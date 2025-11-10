@@ -36,7 +36,7 @@ import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 @Composable
-fun LivePoseLandmarkerScreen2(component: LivePoseLandmarkerComponent) {
+fun LivePoseLandmarkerScreen(component: LivePoseLandmarkerComponent) {
     LivePoseLandmarkerContent(onFinish = component::onBackClick)
 }
 

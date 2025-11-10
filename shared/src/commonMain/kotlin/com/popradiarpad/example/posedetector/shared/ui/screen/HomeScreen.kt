@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import com.popradiarpad.example.posedetector.shared.ui.component.HomeComponent
 
 @Composable
-fun HomeScreen2(component: HomeComponent) {
+fun HomeScreen(component: HomeComponent) {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
