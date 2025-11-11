@@ -44,12 +44,21 @@ class RootComponent(
 
     private fun createChild(config: Config, context: ComponentContext): Child =
         when (config) {
-            is Config.Home -> Child.Home(HomeComponent(context) {
-                @OptIn(DelicateDecomposeApi::class)
-                navigation.push(Config.LivePoseLandmarker)
-            })
-            is Config.LivePoseLandmarker -> Child.LivePoseLandmarker(LivePoseLandmarkerComponent(context) {
-                navigation.pop()
-            })
+            is Config.Home -> Child.Home(
+                HomeComponent(
+                    componentContext = context,
+                    onStartPoseDetection = {
+                        @OptIn(DelicateDecomposeApi::class)
+                        navigation.push(Config.LivePoseLandmarker)
+                    })
+            )
+
+            is Config.LivePoseLandmarker -> Child.LivePoseLandmarker(
+                LivePoseLandmarkerComponent(
+                    componentContext = context,
+                    onBack = {
+                        navigation.pop()
+                    })
+            )
         }
 }
