@@ -15,12 +15,17 @@ import com.popradiarpad.example.posedetector.shared.ui.component.HomeComponent
 
 @Composable
 fun HomeScreen(component: HomeComponent) {
+    HomeContent(onStartPoseDetection = component.onStartPoseDetection)
+}
+
+@Composable
+fun HomeContent(onStartPoseDetection: () -> Unit) {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         Button(
-            onClick = component.onStartPoseDetection,
+            onClick = onStartPoseDetection,
             modifier = Modifier
                 .fillMaxWidth(0.8f)
                 .height(72.dp)
