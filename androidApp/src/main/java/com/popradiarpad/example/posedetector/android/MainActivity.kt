@@ -17,11 +17,13 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
 
+        // The root BLoC containing all other ones.
         val root = RootComponent(
             componentContext = DefaultComponentContext(lifecycle)
         )
 
         setContent {
+            // The main UI.
             App(root)
         }
     }
