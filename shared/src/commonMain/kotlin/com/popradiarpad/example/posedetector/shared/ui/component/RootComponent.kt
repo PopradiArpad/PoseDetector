@@ -25,6 +25,23 @@ class RootComponent(
             childFactory = ::createChild,
         )
 
+
+    // Child component configs (called arguments in other navigation systems)
+    @Serializable
+    sealed interface Config {
+        @Serializable
+        data object Home : Config
+
+        @Serializable
+        data object LivePoseLandmarker : Config
+    }
+
+    // Child components
+    sealed class Child {
+        data class Home(val component: HomeComponent) : Child()
+        data class LivePoseLandmarker(val component: LivePoseLandmarkerComponent) : Child()
+    }
+
     @OptIn(DelicateDecomposeApi::class)
     private fun createChild(config: Config, context: ComponentContext): Child =
         when (config) {
@@ -35,18 +52,4 @@ class RootComponent(
                 navigation.pop()
             })
         }
-
-    sealed class Child {
-        data class Home(val component: HomeComponent) : Child()
-        data class LivePoseLandmarker(val component: LivePoseLandmarkerComponent) : Child()
-    }
-
-    @Serializable
-    sealed interface Config {
-        @Serializable
-        data object Home : Config
-
-        @Serializable
-        data object LivePoseLandmarker : Config
-    }
 }
