@@ -19,9 +19,11 @@ fun HomeScreen(component: HomeComponent) {
 }
 
 @Composable
-fun HomeContent(onStartPoseDetection: () -> Unit) {
+fun HomeContent(
+    modifier: Modifier = Modifier,
+    onStartPoseDetection: () -> Unit) {
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         Button(
