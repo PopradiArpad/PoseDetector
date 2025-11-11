@@ -20,7 +20,7 @@ fun HomeScreen(component: HomeComponent) {
         contentAlignment = Alignment.Center
     ) {
         Button(
-            onClick = component::onStartPoseDetectionClick,
+            onClick = component.onStartPoseDetection,
             modifier = Modifier
                 .fillMaxWidth(0.8f)
                 .height(72.dp)
