@@ -25,22 +25,8 @@ class RootComponent(
             childFactory = ::createChild,
         )
 
-    @OptIn(DelicateDecomposeApi::class)
-    private fun createChild(config: Config, context: ComponentContext): Child =
-        when (config) {
-            is Config.Home -> Child.Home(HomeComponent(context) {
-                navigation.push(Config.LivePoseLandmarker)
-            })
-            is Config.LivePoseLandmarker -> Child.LivePoseLandmarker(LivePoseLandmarkerComponent(context) {
-                navigation.pop()
-            })
-        }
 
-    sealed class Child {
-        data class Home(val component: HomeComponent) : Child()
-        data class LivePoseLandmarker(val component: LivePoseLandmarkerComponent) : Child()
-    }
-
+    // Child component configs (called arguments in other navigation systems)
     @Serializable
     sealed interface Config {
         @Serializable
@@ -49,4 +35,30 @@ class RootComponent(
         @Serializable
         data object LivePoseLandmarker : Config
     }
+
+    // Child components
+    sealed class Child {
+        data class Home(val component: HomeComponent) : Child()
+        data class LivePoseLandmarker(val component: LivePoseLandmarkerComponent) : Child()
+    }
+
+    private fun createChild(config: Config, context: ComponentContext): Child =
+        when (config) {
+            is Config.Home -> Child.Home(
+                HomeComponent(
+                    componentContext = context,
+                    onStartPoseDetection = {
+                        @OptIn(DelicateDecomposeApi::class)
+                        navigation.push(Config.LivePoseLandmarker)
+                    })
+            )
+
+            is Config.LivePoseLandmarker -> Child.LivePoseLandmarker(
+                LivePoseLandmarkerComponent(
+                    componentContext = context,
+                    onBack = {
+                        navigation.pop()
+                    })
+            )
+        }
 }

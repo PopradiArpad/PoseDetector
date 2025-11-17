@@ -37,7 +37,7 @@ import kotlin.math.roundToInt
 
 @Composable
 fun LivePoseLandmarkerScreen(component: LivePoseLandmarkerComponent) {
-    LivePoseLandmarkerContent(onFinish = component::onBackClick)
+    LivePoseLandmarkerContent(onFinish = component.onBack)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -15,10 +15,12 @@ fun App(root: RootComponent) {
         darkTheme = false,
         dynamicColor = false
     ) {
+        // Decompose helper: UI of a Child Stack.
         Children(
             stack = root.childStack,
             animation = stackAnimation(slide())
         ) {
+            // App specific UIs of the children BLoCs.
             when (val child = it.instance) {
                 is RootComponent.Child.Home -> HomeScreen(child.component)
                 is RootComponent.Child.LivePoseLandmarker -> LivePoseLandmarkerScreen(child.component)

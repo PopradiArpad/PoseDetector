@@ -2,12 +2,8 @@ package com.popradiarpad.example.posedetector.shared.ui.component
 
 import com.arkivanov.decompose.ComponentContext
 
+// A minimal component, will be extended when the screen get more feature.
 class HomeComponent(
     componentContext: ComponentContext,
-    private val onNavigate: () -> Unit
-) : ComponentContext by componentContext {
-
-    fun onStartPoseDetectionClick() {
-        onNavigate()
-    }
-}
+    val onStartPoseDetection: () -> Unit
+) : ComponentContext by componentContext

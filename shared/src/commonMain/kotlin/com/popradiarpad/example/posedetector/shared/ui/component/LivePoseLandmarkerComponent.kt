@@ -2,12 +2,8 @@ package com.popradiarpad.example.posedetector.shared.ui.component
 
 import com.arkivanov.decompose.ComponentContext
 
+// A minimal component, will be extended when the screen get more feature.
 class LivePoseLandmarkerComponent(
     componentContext: ComponentContext,
-    private val onNavigateBack: () -> Unit
-) : ComponentContext by componentContext {
-
-    fun onBackClick() {
-        onNavigateBack()
-    }
-}
+    val onBack: () -> Unit
+) : ComponentContext by componentContext
