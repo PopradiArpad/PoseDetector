@@ -8,11 +8,18 @@ import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.backhandler.BackHandlerOwner
 import kotlinx.serialization.Serializable
 
 class RootComponent(
     componentContext: ComponentContext,
-) : ComponentContext by componentContext {
+) :
+    BackHandlerOwner, // For Predictive Back Gesture
+    ComponentContext by componentContext {
+
+    fun onBackClicked() {
+        navigation.pop()
+    }
 
     private val navigation = StackNavigation<Config>()
 

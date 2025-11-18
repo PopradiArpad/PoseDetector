@@ -4,8 +4,10 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-feature android:name="android.hardware.camera" android:required="true" />
 
+    <!-- Predictive Back Gesture needs android:enableOnBackInvokedCallback="true"   -->
     <application
         android:allowBackup="true"
+        android:enableOnBackInvokedCallback="true"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@android:style/Theme.Material.Light.NoActionBar">
