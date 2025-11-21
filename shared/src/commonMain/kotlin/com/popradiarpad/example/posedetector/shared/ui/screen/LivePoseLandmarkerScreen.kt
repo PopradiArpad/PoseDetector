@@ -12,17 +12,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SheetValue
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontStyle
@@ -30,46 +29,53 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.popradiarpad.example.posedetector.shared.ui.component.LivePoseLandmarkerComponent
 import com.popradiarpad.example.posedetector.shared.viewmodel.InferenceTimeStorage
-import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 @Composable
 fun LivePoseLandmarkerScreen(component: LivePoseLandmarkerComponent) {
-    LivePoseLandmarkerContent(onFinish = component.onBack)
+    val slot by component.childSlot.subscribeAsState()
+    val sheetComponentOnDismiss = slot.child?.instance?.run { ::onDismiss }
+
+    LivePoseLandmarkerContent(
+        showInfoSheet = component::showInfoSheet,
+        sheetComponentOnDismiss = sheetComponentOnDismiss,
+        onFinish = component.onBack
+    )
 }
 
+// The component-free internal to make it previewable.
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LivePoseLandmarkerContent(
     modifier: Modifier = Modifier,
+    showInfoSheet: () -> Unit,
+    sheetComponentOnDismiss: (() -> Unit)?,
     onFinish: () -> Unit
 ) {
-    val scope = rememberCoroutineScope()
-    val scaffoldState = rememberBottomSheetScaffoldState()
-
-    BottomSheetScaffold(
-        scaffoldState = scaffoldState,
-        sheetPeekHeight = 0.dp, // When closed, nothing to see from the bottom sheet
-        sheetContent = { InfoBottomSheet() }) {
+    Scaffold { _ -> // no padding for edge to edge
         Box(
             modifier = modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
         ) {
             LivePoseLandmarkerBackground(
                 modifier = Modifier.fillMaxSize()
             )
 
-            if (scaffoldState.bottomSheetState.currentValue != SheetValue.Expanded) {
+            if (sheetComponentOnDismiss == null) {
                 ButtonColumn(
-                    onInfo = {
-                        scope.launch {
-                            // No programmatic closing: just swipe down
-                            scaffoldState.bottomSheetState.expand()
-                        }
-                    },
+                    onInfo = showInfoSheet,
                     onFinish = onFinish
                 )
+            } else {
+                ModalBottomSheet(
+                    onDismissRequest = sheetComponentOnDismiss,
+                    dragHandle = { BottomSheetDefaults.DragHandle() }
+                ) {
+                    InferenceInfo()
+                }
             }
         }
     }
@@ -92,7 +98,7 @@ private fun BoxScope.ButtonColumn(
 }
 
 @Composable
-fun InfoBottomSheet() {
+private fun InferenceInfo() {
     Box(
         modifier = Modifier.fillMaxWidth()
             .padding(16.dp)
@@ -169,6 +175,7 @@ private fun Double.toMilliSecondsString(): String? {
     val hundredths = (this * 100).roundToInt()
     val integerPart = hundredths / 100
     val fractionalPart = hundredths % 100
-    val fractionalString = if (fractionalPart < 10) "0$fractionalPart" else fractionalPart.toString()
+    val fractionalString =
+        if (fractionalPart < 10) "0$fractionalPart" else fractionalPart.toString()
     return "$integerPart.$fractionalString ms"
 }
