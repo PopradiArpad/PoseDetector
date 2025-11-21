@@ -90,6 +90,3 @@ struct CameraErrorView: View {
     }
 }
 
-#Preview {
-    ContentView()
-}

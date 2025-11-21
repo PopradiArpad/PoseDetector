@@ -5,7 +5,12 @@ kotlin = "2.2.21"
 compose-plugin = "1.9.2"
 compose-compiler = "2.2.21"
 napier = "2.7.1"
+jetbrainsKotlinxSerialization = "1.9.0"
+# These must fit together!:
+# start
 decompose = "3.4.0"
+essenty = "2.5.0"
+# end
 
 cameraCore = "1.5.1"
 coreKtx = "1.17.0"
@@ -34,6 +39,13 @@ tasks-vision = { module = "com.google.mediapipe:tasks-vision", version.ref = "ta
 napier = { module = "io.github.aakira:napier", version.ref = "napier" }
 decompose = { module = "com.arkivanov.decompose:decompose", version.ref = "decompose" }
 decompose-extension-compose = { module = "com.arkivanov.decompose:extensions-compose", version.ref = "decompose" }
+jetbrains-kotlinx-kotlinxSerializationJson = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "jetbrainsKotlinxSerialization" }
+
+essenty-lifecycle = { group = "com.arkivanov.essenty", name = "lifecycle", version.ref = "essenty" }
+essenty-lifecycleReaktive = { group = "com.arkivanov.essenty", name = "lifecycle-reaktive", version.ref = "essenty" }
+essenty-stateKeeper = { group = "com.arkivanov.essenty", name = "state-keeper", version.ref = "essenty" }
+essenty-instanceKeeper = { group = "com.arkivanov.essenty", name = "instance-keeper", version.ref = "essenty" }
+essenty-backHandler = { group = "com.arkivanov.essenty", name = "back-handler", version.ref = "essenty" }
 
 # Added for ViewModel and Preview
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "uiTooling" }
