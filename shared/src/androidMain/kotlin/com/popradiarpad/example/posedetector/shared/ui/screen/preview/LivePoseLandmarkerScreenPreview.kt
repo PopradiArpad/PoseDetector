@@ -8,8 +8,23 @@ import com.popradiarpad.example.posedetector.shared.ui.theme.AppTheme
 
 @Preview
 @Composable
-fun LivePoseLandmarkerScreenPreview() {
+fun LivePoseLandmarkerScreenButtonColumnPreview() {
     AppTheme(darkTheme = isSystemInDarkTheme(), dynamicColor = false) {
-        LivePoseLandmarkerContent(onFinish = {})
+        LivePoseLandmarkerContent(
+            showInfoSheet = {},
+            sheetComponentOnDismiss = null,
+            onFinish = {}
+        )
+    }
+}
+@Preview
+@Composable
+fun LivePoseLandmarkerScreenInfoSheetPreview() {
+    AppTheme(darkTheme = isSystemInDarkTheme(), dynamicColor = false) {
+        LivePoseLandmarkerContent(
+            showInfoSheet = {},
+            sheetComponentOnDismiss = {},
+            onFinish = {}
+        )
     }
 }
