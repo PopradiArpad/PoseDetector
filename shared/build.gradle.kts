@@ -26,6 +26,11 @@ kotlin {
         iosSimulatorArm64()
     ).forEach { target ->
         target.binaries.framework {
+            export(libs.decompose)
+            export(libs.essenty.lifecycle)
+            export(libs.essenty.stateKeeper)
+            export(libs.essenty.backHandler)
+
             baseName = "shared"
         }
     }
@@ -63,6 +68,13 @@ kotlin {
 
             implementation(libs.decompose)
             implementation(libs.decompose.extension.compose)
+
+            implementation(libs.jetbrains.kotlinx.kotlinxSerializationJson)
+
+            api(libs.decompose)
+            api(libs.essenty.lifecycle)
+            api(libs.essenty.stateKeeper)
+            api(libs.essenty.backHandler)
         }
         androidMain.dependencies {
             implementation(libs.androidx.core.ktx)
