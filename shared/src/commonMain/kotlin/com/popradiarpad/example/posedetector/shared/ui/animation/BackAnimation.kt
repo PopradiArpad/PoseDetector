@@ -1,4 +1,4 @@
-πpackage com.popradiarpad.example.posedetector.shared.ui.animation
+package com.popradiarpad.example.posedetector.shared.ui.animation
 
 import com.arkivanov.decompose.extensions.compose.stack.animation.StackAnimation
 import com.arkivanov.essenty.backhandler.BackHandler
