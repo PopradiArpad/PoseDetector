@@ -4,11 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.stack.Children
-import com.arkivanov.decompose.extensions.compose.stack.animation.fade
-import com.arkivanov.decompose.extensions.compose.stack.animation.plus
-import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.predictiveBackAnimation
-import com.arkivanov.decompose.extensions.compose.stack.animation.scale
-import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
+import com.popradiarpad.example.posedetector.shared.ui.animation.backAnimation
 import com.popradiarpad.example.posedetector.shared.ui.component.RootComponent
 import com.popradiarpad.example.posedetector.shared.ui.screen.HomeScreen
 import com.popradiarpad.example.posedetector.shared.ui.screen.LivePoseLandmarkerScreen
@@ -28,11 +24,10 @@ fun App(
         Children(
             stack = rootComponent.childStack,
             modifier = modifier,
-            animation = predictiveBackAnimation(
+            animation = backAnimation(
                 backHandler = rootComponent.backHandler,
-                fallbackAnimation = stackAnimation(fade() + scale()),
                 onBack = rootComponent::onBackClicked,
-            )
+            ),
         ) {
             // App specific UIs of the children BLoCs.
             when (val child = it.instance) {
