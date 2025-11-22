@@ -28,11 +28,14 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     private var stateKeeper = StateKeeperDispatcherKt.StateKeeperDispatcher(savedState: nil)
 
     lazy var rootComponent: RootComponent = RootComponent(
+        // Create the root component context on the iOS side to let
+        // the root context have all the bindings to the OS
+        // which make it so powerful.
         componentContext: DefaultComponentContext(
             lifecycle: ApplicationLifecycle(),
             stateKeeper: stateKeeper,
             instanceKeeper: nil,
-            backHandler: nil
+            backHandler: IOSBackHandlerProvider.shared.provide()
         )
     )
 

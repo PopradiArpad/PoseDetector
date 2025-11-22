@@ -17,7 +17,7 @@ import com.popradiarpad.example.posedetector.shared.ui.theme.AppTheme
 @OptIn(ExperimentalDecomposeApi::class)
 @Composable
 fun App(
-    root: RootComponent,
+    rootComponent: RootComponent,
     modifier: Modifier = Modifier
 ) {
     AppTheme(
@@ -26,12 +26,12 @@ fun App(
     ) {
         // Decompose helper: UI of a Child Stack.
         Children(
-            stack = root.childStack,
+            stack = rootComponent.childStack,
             modifier = modifier,
             animation = predictiveBackAnimation(
-                backHandler = root.backHandler,
+                backHandler = rootComponent.backHandler,
                 fallbackAnimation = stackAnimation(fade() + scale()),
-                onBack = root::onBackClicked,
+                onBack = rootComponent::onBackClicked,
             )
         ) {
             // App specific UIs of the children BLoCs.
