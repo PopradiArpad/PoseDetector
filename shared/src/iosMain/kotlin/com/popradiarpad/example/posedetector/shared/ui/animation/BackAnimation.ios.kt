@@ -23,7 +23,10 @@ actual fun <C : Any, T : Any> backAnimation(
     @OptIn(ExperimentalDecomposeApi::class)
     predictiveBackAnimation(
         backHandler = backHandler,
+        // normal forward/backward animation
         fallbackAnimation = stackAnimation(iosLikeSlide()),
+        // selector, terrible name, should be called onPredictiveBackAnimation.
+        // the thing that creates the *gesture-driven* Animatable when predictive back starts
         selector = { initialBackEvent, _, _ ->
             predictiveBackAnimatable(
                 initialBackEvent = initialBackEvent,
@@ -54,7 +57,6 @@ private fun Modifier.fade(factor: Float) =
         drawContent()
         drawRect(color = Color(red = 0F, green = 0F, blue = 0F, alpha = (1F - factor) / 4F))
     }
-
 
 private fun Modifier.offsetXFactor(factor: Float): Modifier =
     layout { measurable, constraints ->
