@@ -50,11 +50,13 @@ class OverlayView(context: Context?) :
     }
 
     private fun initPaints() {
+        // TODO: Make sharable visual parameters shared (e.g. colors).
+
         pointPaint.color = Color.YELLOW
-        pointPaint.strokeWidth = LANDMARK_STROKE_WIDTH
+        pointPaint.strokeWidth = 2 * LANDMARK_STROKE_WIDTH
         pointPaint.style = Paint.Style.FILL
 
-        linePaint.color = Color.RED
+        linePaint.color = Color.rgb(0f, 127f/255f,  139f/255f)
         linePaint.strokeWidth = LANDMARK_STROKE_WIDTH
         linePaint.style = Paint.Style.STROKE
     }
@@ -138,6 +140,6 @@ class OverlayView(context: Context?) :
     }
 
     companion object {
-        private const val LANDMARK_STROKE_WIDTH = 12F
+        private const val LANDMARK_STROKE_WIDTH = 4F
     }
 }
