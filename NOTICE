@@ -12,6 +12,9 @@ Portions of this software are derived from the following works:
   https://github.com/google-ai-edge/mediapipe-samples/tree/main/examples/pose_landmarker/android
   Copyright 2023 The TensorFlow Authors. All rights reserved.
 
+  https://github.com/arkivanov/Decompose/tree/master/sample
+  Copyright 2025 The Decompose Authors. All rights reserved.
+
 --------------------------------------------------------------------------------
 
 Modifications and Additions Copyright 2025 Árpád Poprádi.
