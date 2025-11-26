@@ -1,0 +1,19 @@
+================================================================================
+ATTRIBUTION NOTICES FOR PoseDetector
+================================================================================
+
+This product includes software developed by The TensorFlow Authors and is
+used under the Apache License, Version 2.0.
+Portions of this software are derived from the following works:
+
+  https://github.com/google-ai-edge/mediapipe-samples/tree/main/examples/pose_landmarker/ios
+  Copyright 2022 The TensorFlow Authors. All rights reserved.
+
+  https://github.com/google-ai-edge/mediapipe-samples/tree/main/examples/pose_landmarker/android
+  Copyright 2023 The TensorFlow Authors. All rights reserved.
+
+--------------------------------------------------------------------------------
+
+Modifications and Additions Copyright 2025 Árpád Poprádi.
+All additions and modifications are also licensed under the Apache License,
+Version 2.0
