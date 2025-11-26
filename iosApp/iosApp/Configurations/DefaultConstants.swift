@@ -18,11 +18,12 @@ import MediaPipeTasksVision
 
 // MARK: Define default constants
 struct DefaultConstants {
+  // TODO: Make sharable visual parameters shared (e.g. colors).
 
   static let lineWidth: CGFloat = 2
   static let pointRadius: CGFloat = 2
   static let pointColor = UIColor.yellow
-  static let pointFillColor = UIColor.red
+  static let pointFillColor = pointColor
 
   static let lineColor = UIColor(red: 0, green: 127/255.0, blue: 139/255.0, alpha: 1)
 
