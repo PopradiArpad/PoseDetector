@@ -1,7 +1,9 @@
 # PoseDetector
 
-[![Swift 6.1](https://img.shields.io/badge/Swift-5.9-orange.svg)](https://swift.org)
+[![Android 7+](https://img.shields.io/badge/Android-7+-green.svg)](https://www.android.com)
 [![iOS 17](https://img.shields.io/badge/iOS-17+-blue.svg)](https://developer.apple.com/ios/)
+[![Kotlin](https://img.shields.io/badge/kotlin-2.2.21-blue.svg)](http://kotlinlang.org)
+[![Swift 6.1](https://img.shields.io/badge/Swift-6.1-orange.svg)](https://swift.org)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 
 A minimal Kotlin Multiplatform app for Android and iOS that adapts the
