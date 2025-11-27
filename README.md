@@ -14,13 +14,14 @@ into a KMP app using Decompose ready to extend with other features.
 
 ## Features
 
-- 📸 **Shared App Frame**: using Decompose and integrating the platform dependent pose detection screen.
-- 📸 **Real-Time Pose Detection**: Processes video frames using MediaPipe's Pose Landmarker.
+- **Real-Time Pose Detection**: Processes video frames using MediaPipe's Pose Landmarker.
+- **Shared App Frame**: using Decompose and integrating the platform dependent pose detection screen.
+- **Predictive Back/Swipe Back Integration**: Platform-dependent visual experience for back gesture.
 
 ### On iOS
 
-- 🖼️ **SwiftUI Integration**: Displays camera preview and pose overlays with `UIViewRepresentable`.
-- 🚀 **Modern Concurrency**: Uses Combine for reactive state updates.
+- **SwiftUI Integration**: Displays camera preview and pose overlays with `UIViewRepresentable`.
+- **Modern Concurrency**: Uses Combine for reactive state updates.
 
 ## Screenshots
 
