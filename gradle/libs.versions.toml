@@ -11,6 +11,7 @@ jetbrainsKotlinxSerialization = "1.9.0"
 decompose = "3.4.0"
 essenty = "2.5.0"
 # end
+skie = "0.10.8"
 
 cameraCore = "1.5.1"
 coreKtx = "1.17.0"
@@ -59,3 +60,4 @@ compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose-p
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "compose-compiler" }
 kotlinCocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotlin" }
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+skie = { id = "co.touchlab.skie", version.ref = "skie" }

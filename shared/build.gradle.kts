@@ -2,6 +2,7 @@
 
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import co.touchlab.skie.configuration.FlowInterop
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -10,6 +11,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlinCocoapods)
     alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.skie)
 }
 
 kotlin {
@@ -110,3 +112,16 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 }
+
+// For higher level interop between Kotlin and Swift.
+skie {
+    features {
+        group {
+            FlowInterop.Enabled(false)
+        }
+        group("com.popradiarpad.example.posedetector.shared.viewmodel") {
+            FlowInterop.Enabled(true)
+        }
+    }
+}
+
