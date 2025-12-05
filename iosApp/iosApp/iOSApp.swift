@@ -13,7 +13,7 @@ struct iOSApp: App {
     init() {
         LoggerKt.doInitLogger()
         LivePoseLandmarkerBackgroundFactory.shared.factory = {
-            return UIHostingController(rootView: LivePoseLandmarkerBackground())
+            return UIHostingController(rootView: LivePoseLandmarkerBackground()).view
         }
         InferenceTimeChartFactory.shared.factory = {
             return UIHostingController(rootView: InferenceTimeChart()).view

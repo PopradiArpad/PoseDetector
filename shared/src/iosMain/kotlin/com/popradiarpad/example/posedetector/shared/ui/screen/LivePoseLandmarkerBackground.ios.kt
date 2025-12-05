@@ -2,14 +2,14 @@ package com.popradiarpad.example.posedetector.shared.ui.screen
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.viewinterop.UIKitViewController
-import platform.UIKit.UIViewController
+import androidx.compose.ui.viewinterop.UIKitView
+import platform.UIKit.UIView
 
 @Composable
 actual fun LivePoseLandmarkerBackground(
     modifier: Modifier,
 ) {
-    UIKitViewController(
+    UIKitView(
         factory = LivePoseLandmarkerBackgroundFactory.factory,
         modifier = modifier,
     )
@@ -24,5 +24,5 @@ actual fun LivePoseLandmarkerBackground(
 // 2. can be set from iosApp
 // 3. can be read from shared.
 object LivePoseLandmarkerBackgroundFactory {
-    lateinit var factory: () -> UIViewController
+    lateinit var factory: () -> UIView
 }
