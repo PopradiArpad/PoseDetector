@@ -1,4 +1,4 @@
-package com.popradiarpad.example.posedetector.shared.ui.component
+package com.popradiarpad.example.posedetector.shared.component
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.DelicateDecomposeApi

@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.popradiarpad.example.posedetector.shared.ui.component.HomeComponent
+import com.popradiarpad.example.posedetector.shared.component.HomeComponent
 
 @Composable
 fun HomeScreen(component: HomeComponent) {

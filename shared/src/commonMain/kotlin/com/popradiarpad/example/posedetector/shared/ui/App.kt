@@ -5,7 +5,7 @@ import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.popradiarpad.example.posedetector.shared.ui.animation.backAnimation
-import com.popradiarpad.example.posedetector.shared.ui.component.RootComponent
+import com.popradiarpad.example.posedetector.shared.component.RootComponent
 import com.popradiarpad.example.posedetector.shared.ui.screen.HomeScreen
 import com.popradiarpad.example.posedetector.shared.ui.screen.LivePoseLandmarkerScreen
 import com.popradiarpad.example.posedetector.shared.ui.theme.AppTheme
