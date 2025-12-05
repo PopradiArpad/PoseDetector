@@ -1,4 +1,4 @@
-package com.popradiarpad.example.posedetector.shared.viewmodel
+package com.popradiarpad.example.posedetector.shared.storage
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

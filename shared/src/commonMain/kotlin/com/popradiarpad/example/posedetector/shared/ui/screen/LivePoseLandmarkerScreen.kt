@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.popradiarpad.example.posedetector.shared.component.LivePoseLandmarkerComponent
-import com.popradiarpad.example.posedetector.shared.viewmodel.InferenceTimeStorage
+import com.popradiarpad.example.posedetector.shared.storage.InferenceTimeStorage
 import kotlin.math.roundToInt
 
 @Composable

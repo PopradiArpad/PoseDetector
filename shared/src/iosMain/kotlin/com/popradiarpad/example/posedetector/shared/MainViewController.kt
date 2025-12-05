@@ -9,7 +9,6 @@ import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.PredictiveBackGestureIcon
 import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.PredictiveBackGestureOverlay
 import com.arkivanov.essenty.backhandler.BackDispatcher
-import com.popradiarpad.example.posedetector.shared.ui.App
 import com.popradiarpad.example.posedetector.shared.component.RootComponent
 
 @OptIn(ExperimentalDecomposeApi::class)

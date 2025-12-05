@@ -1,7 +1,7 @@
 package com.arkivanov.sample.shared
 
 import com.arkivanov.essenty.statekeeper.SerializableContainer
-import com.popradiarpad.example.posedetector.shared.json
+import com.popradiarpad.example.posedetector.shared.util.json
 import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Foundation.NSCoder

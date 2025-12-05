@@ -1,4 +1,4 @@
-package com.popradiarpad.example.posedetector.shared.ui
+package com.popradiarpad.example.posedetector.shared
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
