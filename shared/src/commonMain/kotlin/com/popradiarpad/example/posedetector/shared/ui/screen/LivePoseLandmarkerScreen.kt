@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -32,6 +33,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.popradiarpad.example.posedetector.shared.component.LivePoseLandmarkerComponent
 import com.popradiarpad.example.posedetector.shared.storage.InferenceTimeStorage
+import com.popradiarpad.example.posedetector.shared.ui.widget.InferenceTimeChart
 import kotlin.math.roundToInt
 
 @Composable
@@ -103,7 +105,12 @@ private fun InferenceInfo() {
         modifier = Modifier.fillMaxWidth()
             .padding(16.dp)
     ) {
-        InferenceTime()
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            InferenceTime()
+            InferenceTimeChart(modifier = Modifier.fillMaxWidth().height(200.dp))
+        }
     }
 }
 
