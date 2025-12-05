@@ -1,4 +1,4 @@
-package com.popradiarpad.example.posedetector.shared
+package com.popradiarpad.example.posedetector.shared.util
 
 import kotlinx.serialization.json.Json
 

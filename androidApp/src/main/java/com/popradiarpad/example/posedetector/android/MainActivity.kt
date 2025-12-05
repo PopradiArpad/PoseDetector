@@ -7,8 +7,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.defaultComponentContext
-import com.popradiarpad.example.posedetector.shared.ui.App
-import com.popradiarpad.example.posedetector.shared.ui.component.RootComponent
+import com.popradiarpad.example.posedetector.shared.App
+import com.popradiarpad.example.posedetector.shared.component.RootComponent
 import com.popradiarpad.example.posedetector.shared.util.initLogger
 
 class MainActivity : ComponentActivity() {
