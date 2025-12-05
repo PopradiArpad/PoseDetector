@@ -15,6 +15,9 @@ struct iOSApp: App {
         LivePoseLandmarkerBackgroundFactory.shared.factory = {
             return UIHostingController(rootView: LivePoseLandmarkerBackground())
         }
+        InferenceTimeChartFactory.shared.factory = {
+            return UIHostingController(rootView: InferenceTimeChart()).view
+        }
     }
 
     var body: some Scene {
