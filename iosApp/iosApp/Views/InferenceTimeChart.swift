@@ -28,9 +28,7 @@ struct InferenceTimeChart: View {
                     let height = geo.size.height
 
                     backGroundGrid(width: width, height: height)
-                    if !points.isEmpty {
-                        lineChart(width: width, height: height)
-                    }
+                    lineChart(width: width, height: height)
                 }
             }
             // Take the full rest height.
