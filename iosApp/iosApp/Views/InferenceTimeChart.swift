@@ -11,11 +11,11 @@ import shared
 struct InferenceTimeChart: View {
     let storage: InferenceTimeStorage
 
-    // Hold the latest window of data points for the chart
+    // The latest window of data points for the chart
     @State private var points: [InferenceDataPoint] = []
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
+        VStack(spacing: 0 /*take the full height for content*/) {
             Text("Inference Time (last 10s)")
                 .font(.headline)
                 .frame(maxWidth: .infinity, alignment: .center)
@@ -37,12 +37,15 @@ struct InferenceTimeChart: View {
                     }
                 }
             }
-            .frame(height: 180)
+            // Take the full rest height.
+            .frame(maxHeight: .infinity)
         }
+        // Take the full height given to this View.
+        .frame(maxHeight: .infinity)
         .task {
-            for await newList in storage.dataPoints {
+            for await newPoints in storage.dataPoints {
                 withAnimation(.linear(duration: 0.15)) {
-                    points = newList  // Always the latest rolling 10-second window
+                    points = newPoints
                 }
             }
         }
@@ -106,9 +109,11 @@ struct InferenceTimeChart: View {
             )
     )
     .padding()
+    .frame(height: 240)
 }
 
 #Preview("Empty state") {
     InferenceTimeChart(storage: PreviewInferenceTimeStorage(dataPoints: []))
         .padding()
+        .frame(height: 240)
 }
