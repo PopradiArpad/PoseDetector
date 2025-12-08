@@ -97,23 +97,35 @@ struct InferenceTimeChart: View {
 }
 
 #Preview("Realistic fluctuating data") {
-    InferenceTimeChart(
-        storage:
-            PreviewInferenceTimeStorage(
-                dataPoints: (0..<30).map { i in
-                    InferenceDataPoint(
-                        inferenceTimeMs: 22 + Double.random(in: -15...30),
-                        timestampEpochMs: 1_700_000_000_000 + i * 333
-                    )
-                }
-            )
-    )
-    .padding()
-    .frame(height: 240)
+    // Simulate bottom sheet positioning
+    VStack(spacing: 0) {
+        Color.clear
+            .frame(maxHeight: .infinity)
+
+        InferenceTimeChart(
+            storage:
+                PreviewInferenceTimeStorage(
+                    dataPoints: (0..<30).map { i in
+                        InferenceDataPoint(
+                            inferenceTimeMs: 22 + Double.random(in: -15...30),
+                            timestampEpochMs: 1_700_000_000_000 + i * 333
+                        )
+                    }
+                )
+        )
+        .padding()
+        .frame(height: 240)
+    }
 }
 
 #Preview("Empty state") {
-    InferenceTimeChart(storage: PreviewInferenceTimeStorage(dataPoints: []))
-        .padding()
-        .frame(height: 240)
+    // Simulate bottom sheet positioning
+    VStack(spacing: 0) {
+        Color.clear
+            .frame(maxHeight: .infinity)
+
+        InferenceTimeChart(storage: PreviewInferenceTimeStorage(dataPoints: []))
+            .padding()
+            .frame(height: 240)
+    }
 }
