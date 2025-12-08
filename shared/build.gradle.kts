@@ -119,7 +119,7 @@ skie {
         group {
             FlowInterop.Enabled(false)
         }
-π        group("com.popradiarpad.example.posedetector.shared.storage") {
+        group("com.popradiarpad.example.posedetector.shared.storage") {
             FlowInterop.Enabled(true)
         }
     }

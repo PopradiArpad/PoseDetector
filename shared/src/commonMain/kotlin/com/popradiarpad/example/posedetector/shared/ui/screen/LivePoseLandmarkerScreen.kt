@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.popradiarpad.example.posedetector.shared.component.LivePoseLandmarkerComponent
-import com.popradiarpad.example.posedetector.shared.storage.InferenceTimeStorage
+import com.popradiarpad.example.posedetector.shared.storage.RealInferenceTimeStorage
 import com.popradiarpad.example.posedetector.shared.ui.widget.InferenceTimeChart
 import kotlin.math.roundToInt
 
@@ -126,7 +126,7 @@ private fun InferenceTime() {
             modifier = Modifier.padding(16.dp)
         )
 
-        val inferenceTimeMs by InferenceTimeStorage.inferenceTimeMs.collectAsStateWithLifecycle()
+        val inferenceTimeMs by RealInferenceTimeStorage.inferenceTimeMs.collectAsStateWithLifecycle()
 
         Text(
             text = inferenceTimeMs?.toMilliSecondsString() ?: "--",

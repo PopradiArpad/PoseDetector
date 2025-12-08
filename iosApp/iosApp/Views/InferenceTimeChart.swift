@@ -6,21 +6,23 @@
 //
 
 import SwiftUI
-import shared  // Your KMP module
+import shared
 
 struct InferenceTimeChart: View {
+    let storage: InferenceTimeStorage
+
     // Hold the latest window of data points for the chart
-    @State private var points: [InferenceTimeStorage.DataPoint] = []
+    @State private var points: [InferenceDataPoint] = []
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Inference Time (last 10s)")
                 .font(.headline)
-                .frame(maxWidth: .infinity, alignment: .center)  // ← centers it
+                .frame(maxWidth: .infinity, alignment: .center)
                 .padding(.top, 12)
                 .padding(.horizontal)
                 .background(.ultraThinMaterial)  // subtle background on light/dark
-            
+
             GeometryReader { geo in
                 ZStack {
                     // Background grid
@@ -40,8 +42,7 @@ struct InferenceTimeChart: View {
             .padding(.horizontal)
         }
         .task {
-            // This is the magic: SKIE turns your StateFlow<List<DataPoint>> into AsyncSequence<[DataPoint]>
-            for await newList in InferenceTimeStorage.shared.dataPoints {
+            for await newList in storage.dataPoints {
                 withAnimation(.linear(duration: 0.15)) {
                     points = newList  // Always the latest rolling 10-second window
                 }
@@ -94,6 +95,20 @@ struct InferenceTimeChart: View {
     }
 }
 
-#Preview {
-    InferenceTimeChart()
+#Preview("Realistic fluctuating data") {
+    InferenceTimeChart(
+        storage:
+            PreviewInferenceTimeStorage(
+                dataPoints: (0..<30).map { i in
+                    InferenceDataPoint(
+                        inferenceTimeMs: 22 + Double.random(in: -15...30),
+                        timestampEpochMs: 1_700_000_000_000 + i * 333
+                    )
+                }
+            )
+    )
+}
+
+#Preview("Empty state") {
+    InferenceTimeChart(storage: PreviewInferenceTimeStorage(dataPoints: []))
 }

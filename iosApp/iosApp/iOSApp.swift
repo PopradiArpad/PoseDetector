@@ -13,10 +13,17 @@ struct iOSApp: App {
     init() {
         LoggerKt.doInitLogger()
         LivePoseLandmarkerBackgroundFactory.shared.factory = {
-            return UIHostingController(rootView: LivePoseLandmarkerBackground()).view
+            UIHostingController(rootView: LivePoseLandmarkerBackground())
+                .view
         }
         InferenceTimeChartFactory.shared.factory = {
-            return UIHostingController(rootView: InferenceTimeChart()).view
+            UIHostingController(
+                rootView:
+                    InferenceTimeChart(
+                        storage:
+                            RealInferenceTimeStorage.shared
+                    )
+            ).view
         }
     }
 
@@ -28,7 +35,9 @@ struct iOSApp: App {
 }
 
 class AppDelegate: NSObject, UIApplicationDelegate {
-    private var stateKeeper = StateKeeperDispatcherKt.StateKeeperDispatcher(savedState: nil)
+    private var stateKeeper = StateKeeperDispatcherKt.StateKeeperDispatcher(
+        savedState: nil
+    )
 
     lazy var rootComponent: RootComponent = RootComponent(
         // Create the root component context on the iOS side to let
@@ -42,13 +51,21 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         )
     )
 
-    func application(_ application: UIApplication, shouldSaveSecureApplicationState coder: NSCoder) -> Bool {
+    func application(
+        _ application: UIApplication,
+        shouldSaveSecureApplicationState coder: NSCoder
+    ) -> Bool {
         StateKeeperUtilsKt.save(coder: coder, state: stateKeeper.save())
         return true
     }
 
-    func application(_ application: UIApplication, shouldRestoreSecureApplicationState coder: NSCoder) -> Bool {
-        stateKeeper = StateKeeperDispatcherKt.StateKeeperDispatcher(savedState: StateKeeperUtilsKt.restore(coder: coder))
+    func application(
+        _ application: UIApplication,
+        shouldRestoreSecureApplicationState coder: NSCoder
+    ) -> Bool {
+        stateKeeper = StateKeeperDispatcherKt.StateKeeperDispatcher(
+            savedState: StateKeeperUtilsKt.restore(coder: coder)
+        )
         return true
     }
 }
