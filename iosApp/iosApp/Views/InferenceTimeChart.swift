@@ -24,16 +24,12 @@ struct InferenceTimeChart: View {
 
             GeometryReader { geo in
                 ZStack {
-                    // Background grid
-                    gridLines(width: geo.size.width, height: geo.size.height)
+                    let width = geo.size.width
+                    let height = geo.size.height
 
-                    // The actual line chart
+                    backGroundGrid(width: width, height: height)
                     if !points.isEmpty {
-                        chartLine(
-                            width: geo.size.width,
-                            height: geo.size.height
-                        )
-                        .stroke(Color.blue, lineWidth: 2.5)
+                        lineChart(width: width, height: height)
                     }
                 }
             }
@@ -52,7 +48,7 @@ struct InferenceTimeChart: View {
     }
 
     // Simple horizontal + vertical grid
-    private func gridLines(width: CGFloat, height: CGFloat) -> some View {
+    private func backGroundGrid(width: CGFloat, height: CGFloat) -> some View {
         Path { path in
             // Horizontal lines
             for i in 0...4 {
@@ -71,7 +67,7 @@ struct InferenceTimeChart: View {
     }
 
     // The real chart line
-    private func chartLine(width: CGFloat, height: CGFloat) -> Path {
+    private func lineChart(width: CGFloat, height: CGFloat) -> some View {
         Path { path in
             guard !points.isEmpty else { return }
 
@@ -93,6 +89,7 @@ struct InferenceTimeChart: View {
                 }
             }
         }
+        .stroke(Color.blue, lineWidth: 2.5)
     }
 }
 
