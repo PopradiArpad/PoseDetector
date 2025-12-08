@@ -15,12 +15,11 @@ struct InferenceTimeChart: View {
     @State private var points: [InferenceDataPoint] = []
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 0) {
             Text("Inference Time (last 10s)")
                 .font(.headline)
                 .frame(maxWidth: .infinity, alignment: .center)
-                .padding(.top, 12)
-                .padding(.horizontal)
+                .padding(.vertical, 12)
                 .background(.ultraThinMaterial)  // subtle background on light/dark
 
             GeometryReader { geo in
@@ -39,7 +38,6 @@ struct InferenceTimeChart: View {
                 }
             }
             .frame(height: 180)
-            .padding(.horizontal)
         }
         .task {
             for await newList in storage.dataPoints {
@@ -107,8 +105,10 @@ struct InferenceTimeChart: View {
                 }
             )
     )
+    .padding()
 }
 
 #Preview("Empty state") {
     InferenceTimeChart(storage: PreviewInferenceTimeStorage(dataPoints: []))
+        .padding()
 }

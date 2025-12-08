@@ -51,7 +51,7 @@ class PoseViewModel : ViewModel() {
             _poseLandmarkerResultBundle.value = resultBundle
             // Share some inference results with shared view models (here we are in platform-specific)
             // to feed shared UI.
-π            RealInferenceTimeStorage.setInferenceTimeMs(resultBundle.inferenceTime.toDouble())
+            RealInferenceTimeStorage.setInferenceTimeMs(resultBundle.inferenceTime.toDouble())
         }
 
         override fun onError(error: String, errorCode: Int) {

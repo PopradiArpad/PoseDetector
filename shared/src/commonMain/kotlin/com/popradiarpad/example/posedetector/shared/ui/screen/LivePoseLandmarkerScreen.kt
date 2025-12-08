@@ -109,7 +109,7 @@ private fun InferenceInfo() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             InferenceTime()
-            InferenceTimeChart(modifier = Modifier.fillMaxWidth().height(200.dp))
+            InferenceTimeChart(modifier = Modifier.fillMaxWidth().height(240.dp))
         }
     }
 }
@@ -117,8 +117,7 @@ private fun InferenceInfo() {
 @Composable
 private fun InferenceTime() {
     Row(
-        modifier = Modifier.fillMaxWidth()
-            .padding(top = 16.dp),
+        modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
