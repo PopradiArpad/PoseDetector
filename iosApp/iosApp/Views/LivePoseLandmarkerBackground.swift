@@ -48,10 +48,14 @@ struct LivePoseLandmarkerBackground: View {
             }
         }
         .onAppear {
-            viewModel.onAppear()
+            #if !targetEnvironment(simulator)
+                viewModel.onAppear()
+            #endif
         }
         .onDisappear {
-            viewModel.onDisappear()
+            #if !targetEnvironment(simulator)
+                viewModel.onDisappear()
+            #endif
         }
         .alert("Camera Permission Required", isPresented: $showingSettingsAlert)
         {

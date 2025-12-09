@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -31,7 +32,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.popradiarpad.example.posedetector.shared.component.LivePoseLandmarkerComponent
-import com.popradiarpad.example.posedetector.shared.storage.InferenceTimeStorage
+import com.popradiarpad.example.posedetector.shared.storage.RealInferenceTimeStorage
+import com.popradiarpad.example.posedetector.shared.ui.widget.InferenceTimeChart
 import kotlin.math.roundToInt
 
 @Composable
@@ -101,30 +103,26 @@ private fun BoxScope.ButtonColumn(
 private fun InferenceInfo() {
     Box(
         modifier = Modifier.fillMaxWidth()
-            .padding(16.dp)
     ) {
-        InferenceTime()
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            InferenceTime()
+            InferenceTimeChart(modifier = Modifier.fillMaxWidth().height(240.dp))
+        }
     }
 }
 
 @Composable
 private fun InferenceTime() {
     Row(
-        modifier = Modifier.fillMaxWidth()
-            .padding(top = 16.dp),
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp, vertical = 16.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(
-            "Inference Time",
-            modifier = Modifier.padding(16.dp)
-        )
+        val inferenceTimeMs by RealInferenceTimeStorage.inferenceTimeMs.collectAsStateWithLifecycle()
 
-        val inferenceTimeMs by InferenceTimeStorage.inferenceTimeMs.collectAsStateWithLifecycle()
-
-        Text(
-            text = inferenceTimeMs?.toMilliSecondsString() ?: "--",
-            modifier = Modifier.padding(16.dp)
-        )
+        Text("Inference Time")
+        Text(inferenceTimeMs?.toMilliSecondsString() ?: "--")
     }
 }
 

@@ -13,7 +13,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.mediapipe.tasks.vision.core.RunningMode
 import com.popradiarpad.example.posedetector.shared.PoseLandmarkerHelper
-import com.popradiarpad.example.posedetector.shared.storage.InferenceTimeStorage
+import com.popradiarpad.example.posedetector.shared.storage.RealInferenceTimeStorage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -51,7 +51,7 @@ class PoseViewModel : ViewModel() {
             _poseLandmarkerResultBundle.value = resultBundle
             // Share some inference results with shared view models (here we are in platform-specific)
             // to feed shared UI.
-            InferenceTimeStorage.setInferenceTimeMs(resultBundle.inferenceTime.toDouble())
+            RealInferenceTimeStorage.setInferenceTimeMs(resultBundle.inferenceTime.toDouble())
         }
 
         override fun onError(error: String, errorCode: Int) {
