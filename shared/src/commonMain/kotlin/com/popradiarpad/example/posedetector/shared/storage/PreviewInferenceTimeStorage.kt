@@ -1,5 +1,6 @@
 package com.popradiarpad.example.posedetector.shared.storage
 
+import androidx.compose.runtime.staticCompositionLocalOf
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
@@ -19,3 +20,6 @@ class PreviewInferenceTimeStorage(
         // Unneeded in preview.
     }
 }
+
+val LocalPreviewInferenceTimeStorage =
+    staticCompositionLocalOf<PreviewInferenceTimeStorage?> { null }

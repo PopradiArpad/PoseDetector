@@ -26,11 +26,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.popradiarpad.example.posedetector.shared.storage.InferenceDataPoint
 import com.popradiarpad.example.posedetector.shared.storage.InferenceTimeStorage
+import com.popradiarpad.example.posedetector.shared.storage.LocalPreviewInferenceTimeStorage
 import com.popradiarpad.example.posedetector.shared.storage.RealInferenceTimeStorage
 
 @Composable
 actual fun InferenceTimeChart(modifier: Modifier) {
-    InferenceTimeChartContent(RealInferenceTimeStorage, modifier)
+    InferenceTimeChartContent(
+        storage = LocalPreviewInferenceTimeStorage.current ?: RealInferenceTimeStorage,
+        modifier
+    )
 }
 
 @Composable
