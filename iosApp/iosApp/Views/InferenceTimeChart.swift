@@ -109,7 +109,6 @@ struct InferenceTimeChart: View {
                     }
                 )
         )
-        .padding()
         .frame(height: 240)
     }
 }
@@ -121,7 +120,6 @@ struct InferenceTimeChart: View {
             .frame(maxHeight: .infinity)
 
         InferenceTimeChart(storage: PreviewInferenceTimeStorage(dataPoints: []))
-            .padding()
             .frame(height: 240)
     }
 }
