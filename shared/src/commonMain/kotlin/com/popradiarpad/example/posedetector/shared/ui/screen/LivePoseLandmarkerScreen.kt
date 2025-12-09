@@ -103,7 +103,6 @@ private fun BoxScope.ButtonColumn(
 private fun InferenceInfo() {
     Box(
         modifier = Modifier.fillMaxWidth()
-//            .padding(16.dp)
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
