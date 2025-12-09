@@ -103,7 +103,7 @@ private fun BoxScope.ButtonColumn(
 private fun InferenceInfo() {
     Box(
         modifier = Modifier.fillMaxWidth()
-            .padding(16.dp)
+//            .padding(16.dp)
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
@@ -117,20 +117,13 @@ private fun InferenceInfo() {
 @Composable
 private fun InferenceTime() {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp, vertical = 16.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(
-            "Inference Time",
-            modifier = Modifier.padding(16.dp)
-        )
-
         val inferenceTimeMs by RealInferenceTimeStorage.inferenceTimeMs.collectAsStateWithLifecycle()
 
-        Text(
-            text = inferenceTimeMs?.toMilliSecondsString() ?: "--",
-            modifier = Modifier.padding(16.dp)
-        )
+        Text("Inference Time")
+        Text(inferenceTimeMs?.toMilliSecondsString() ?: "--")
     }
 }
 
