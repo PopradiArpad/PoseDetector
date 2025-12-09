@@ -73,11 +73,12 @@ struct InferenceTimeChart: View {
             let times = points.map { $0.inferenceTimeMs }
             let minTime = times.min() ?? 0
             let maxTime = max(times.max() ?? 100, minTime + 1)  // avoid divide by zero
-
+            let timeRange = maxTime - minTime
+            
             for (index, point) in points.enumerated() {
                 let x = width * CGFloat(index) / CGFloat(points.count - 1)
                 let normalizedTime =
-                    (point.inferenceTimeMs - minTime) / (maxTime - minTime)
+                    (point.inferenceTimeMs - minTime) / timeRange
                 let y = height * (1 - CGFloat(normalizedTime))  // invert Y (0ms at bottom)
 
                 if index == 0 {

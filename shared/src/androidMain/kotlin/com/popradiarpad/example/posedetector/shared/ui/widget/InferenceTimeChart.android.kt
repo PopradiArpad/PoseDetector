@@ -45,9 +45,7 @@ fun InferenceTimeChartContent(
     // Subscribe to the shared Flow
     LaunchedEffect(storage) {
         storage.dataPoints.collect { newPoints ->
-            withFrameMillis { _ ->
-                points = newPoints
-            }
+            points = newPoints
         }
     }
 
@@ -107,7 +105,7 @@ fun InferenceTimeChartContent(
                     val times = points.map { it.inferenceTimeMs.toFloat() }
                     val minTime = times.minOrNull() ?: 0f
                     val maxTime = maxOf(times.maxOrNull() ?: 100f, minTime + 1f)
-                    val timeRange = maxTime - minTime.coerceAtLeast(1f)
+                    val timeRange = maxTime - minTime
 
                     val path = Path().apply {
                         points.forEachIndexed { index, point ->
