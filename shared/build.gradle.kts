@@ -77,6 +77,7 @@ kotlin {
             api(libs.essenty.lifecycle)
             api(libs.essenty.stateKeeper)
             api(libs.essenty.backHandler)
+            implementation("com.popradiarpad.kmpcamerautils:kmp-camera-utils:0.1")
         }
         androidMain.dependencies {
             implementation(libs.androidx.core.ktx)

@@ -34,6 +34,7 @@ import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.popradiarpad.example.posedetector.shared.component.LivePoseLandmarkerComponent
 import com.popradiarpad.example.posedetector.shared.storage.RealInferenceTimeStorage
 import com.popradiarpad.example.posedetector.shared.ui.widget.InferenceTimeChart
+import com.popradiarpad.kmpcamerautils.EnsureCameraPermission
 import kotlin.math.roundToInt
 
 @Composable
@@ -62,24 +63,35 @@ fun LivePoseLandmarkerContent(
             modifier = modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            LivePoseLandmarkerBackground(
-                modifier = Modifier.fillMaxSize()
-            )
-
-            if (sheetComponentOnDismiss == null) {
-                ButtonColumn(
-                    onInfo = showInfoSheet,
-                    onFinish = onFinish
+            EnsureCameraPermission(
+                whenPermissionNotGranted = { PermissionIsNeeded(modifier) }
+            ) {
+                LivePoseLandmarkerBackground(
+                    modifier = Modifier.fillMaxSize()
                 )
-            } else {
-                ModalBottomSheet(
-                    onDismissRequest = sheetComponentOnDismiss,
-                    dragHandle = { BottomSheetDefaults.DragHandle() }
-                ) {
-                    InferenceInfo()
+
+                if (sheetComponentOnDismiss == null) {
+                    ButtonColumn(
+                        onInfo = showInfoSheet,
+                        onFinish = onFinish
+                    )
+                } else {
+                    ModalBottomSheet(
+                        onDismissRequest = sheetComponentOnDismiss,
+                        dragHandle = { BottomSheetDefaults.DragHandle() }
+                    ) {
+                        InferenceInfo()
+                    }
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun PermissionIsNeeded(modifier: Modifier) {
+    Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Text("Camera permission is required.")
     }
 }
 
