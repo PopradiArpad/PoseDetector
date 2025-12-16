@@ -77,7 +77,7 @@ kotlin {
             api(libs.essenty.lifecycle)
             api(libs.essenty.stateKeeper)
             api(libs.essenty.backHandler)
-            implementation("com.popradiarpad.ensurecamerapermission:ensure-camera-permission:0.1.0")
+            implementation("io.github.popradiarpad:ensure-camera-permission:1.0.0")
         }
         androidMain.dependencies {
             implementation(libs.androidx.core.ktx)
