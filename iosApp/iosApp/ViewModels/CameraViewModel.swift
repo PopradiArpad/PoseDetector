@@ -28,7 +28,6 @@ class CameraViewModel: NSObject, ObservableObject {
 
     enum CameraError: String {
         case configFailed
-        case permissionDenied
     }
 
     @Published private(set) var cameraError: CameraError? = nil
@@ -93,8 +92,6 @@ class CameraViewModel: NSObject, ObservableObject {
                     return nil  // Clear error on success
                 case .configFailed:
                     return .configFailed
-                case .permissionDenied:
-                    return .permissionDenied
                 case .none:
                     return nil  // Initial state
                 }

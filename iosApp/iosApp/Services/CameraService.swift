@@ -61,7 +61,6 @@ class CameraService: NSObject, ObservableObject,
     enum CameraStatus: String {
         case configured
         case configFailed
-        case permissionDenied
     }
 
     @Published private(set) var status: CameraStatus? = nil
@@ -108,8 +107,7 @@ class CameraService: NSObject, ObservableObject,
     override init() {
         super.init()
         setUpLiveVideoLayer()
-        // Start the process of checking permission and configuring the session
-        checkPermissionsAndConfigure()
+        startConfigureSession()
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(orientationChanged),
@@ -125,35 +123,6 @@ class CameraService: NSObject, ObservableObject,
     private func setUpLiveVideoLayer() {
         liveVideoLayer.videoGravity = videoGravity
         setLiveVideoOrientation(.portrait)
-    }
-
-    // MARK: permission handling
-
-    // New entry point to handle the asynchronous nature of permissions
-    private func checkPermissionsAndConfigure() {
-        switch AVCaptureDevice.authorizationStatus(for: .video) {
-        case .authorized:
-            startConfigureSession()
-
-        case .notDetermined:
-            // Request permission. The setup will continue inside the callback.
-            AVCaptureDevice.requestAccess(for: .video) { [weak self] granted in
-                guard let self = self else { return }
-                if granted {
-                    self.startConfigureSession()
-                } else {
-                    setStatus(.permissionDenied)
-                }
-            }
-
-        case .denied, .restricted:
-            setStatus(.permissionDenied)
-
-        @unknown default:
-            // Handle any new statuses
-            print("Unknown authorization status encountered.")
-            return
-        }
     }
 
     // MARK: AVCapture session setup

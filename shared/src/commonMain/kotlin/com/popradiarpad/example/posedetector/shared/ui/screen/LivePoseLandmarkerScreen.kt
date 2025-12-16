@@ -34,7 +34,7 @@ import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.popradiarpad.example.posedetector.shared.component.LivePoseLandmarkerComponent
 import com.popradiarpad.example.posedetector.shared.storage.RealInferenceTimeStorage
 import com.popradiarpad.example.posedetector.shared.ui.widget.InferenceTimeChart
-import com.popradiarpad.kmpcamerautils.EnsureCameraPermission
+import com.popradiarpad.ensurecamerapermission.EnsureCameraPermission
 import kotlin.math.roundToInt
 
 @Composable
@@ -63,9 +63,7 @@ fun LivePoseLandmarkerContent(
             modifier = modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            EnsureCameraPermission(
-                whenPermissionNotGranted = { PermissionIsNeeded(modifier) }
-            ) {
+            EnsureCameraPermission {
                 LivePoseLandmarkerBackground(
                     modifier = Modifier.fillMaxSize()
                 )
@@ -89,8 +87,29 @@ fun LivePoseLandmarkerContent(
 }
 
 @Composable
-private fun PermissionIsNeeded(modifier: Modifier) {
-    Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+private fun EnsureCameraPermission(
+    whenPermissionGranted: @Composable () -> Unit,
+) {
+    EnsureCameraPermission(
+        permissionRequestDialogTitle = "Camera Access Required",
+        rationale = "PoseDetector needs access to your camera to show pose landmarks.",
+
+        // Android Dialog Buttons
+        rationaleAcceptedText = "Accept",
+        rationaleDeniedText = "Not now",
+
+        // Permanent Denial Buttons
+        toSettingsText = "Settings",
+        cancelToSettingsText = "Cancel",
+
+        whenPermissionNotGrantedBackground = { PermissionNotGrantedBackground() },
+        whenPermissionGranted = whenPermissionGranted
+    )
+}
+
+@Composable
+private fun PermissionNotGrantedBackground() {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Text("Camera permission is required.")
     }
 }
