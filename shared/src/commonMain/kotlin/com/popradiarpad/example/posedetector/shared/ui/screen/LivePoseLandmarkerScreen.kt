@@ -94,11 +94,11 @@ private fun EnsureCameraPermission(
         permissionRequestDialogTitle = "Camera Access Required",
         rationale = "PoseDetector needs access to your camera to show pose landmarks.",
 
-        // Android Dialog Buttons
+        // The Rationale Dialog Buttons
         rationaleAcceptedText = "Accept",
         rationaleDeniedText = "Not now",
 
-        // Permanent Denial Buttons
+        // In case of permanent denial the ToSettings Dialog Buttons
         toSettingsText = "Settings",
         cancelToSettingsText = "Cancel",
 
