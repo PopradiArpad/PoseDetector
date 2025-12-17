@@ -77,6 +77,7 @@ kotlin {
             api(libs.essenty.lifecycle)
             api(libs.essenty.stateKeeper)
             api(libs.essenty.backHandler)
+            implementation(libs.ensureCameraPermission)
         }
         androidMain.dependencies {
             implementation(libs.androidx.core.ktx)

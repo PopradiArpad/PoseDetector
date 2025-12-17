@@ -16,7 +16,6 @@ import SwiftUI
 
 struct LivePoseLandmarkerBackground: View {
     @StateObject private var viewModel = CameraViewModel()
-    @State private var showingSettingsAlert = false
 
     var body: some View {
         ZStack {
@@ -36,17 +35,6 @@ struct LivePoseLandmarkerBackground: View {
                 Spacer()
             }
         }
-        .onChange(of: viewModel.cameraError) {
-            print("onChange status: \(viewModel.cameraError.asString)")
-            guard let error = viewModel.cameraError else { return }
-
-            switch error {
-            case .permissionDenied:
-                showingSettingsAlert = true
-            default:
-                break
-            }
-        }
         .onAppear {
             #if !targetEnvironment(simulator)
                 viewModel.onAppear()
@@ -56,19 +44,6 @@ struct LivePoseLandmarkerBackground: View {
             #if !targetEnvironment(simulator)
                 viewModel.onDisappear()
             #endif
-        }
-        .alert("Camera Permission Required", isPresented: $showingSettingsAlert)
-        {
-            Button("Settings") {
-                openAppSettings()
-            }
-            Button("Cancel", role: .cancel) {
-                // Do nothing, just dismiss the alert
-            }
-        } message: {
-            Text(
-                "To use the pose detection feature, please grant camera access in your device settings."
-            )
         }
     }
 

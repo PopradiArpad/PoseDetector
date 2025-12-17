@@ -34,6 +34,7 @@ import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.popradiarpad.example.posedetector.shared.component.LivePoseLandmarkerComponent
 import com.popradiarpad.example.posedetector.shared.storage.RealInferenceTimeStorage
 import com.popradiarpad.example.posedetector.shared.ui.widget.InferenceTimeChart
+import com.popradiarpad.ensurecamerapermission.EnsureCameraPermission
 import kotlin.math.roundToInt
 
 @Composable
@@ -62,24 +63,54 @@ fun LivePoseLandmarkerContent(
             modifier = modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            LivePoseLandmarkerBackground(
-                modifier = Modifier.fillMaxSize()
-            )
-
-            if (sheetComponentOnDismiss == null) {
-                ButtonColumn(
-                    onInfo = showInfoSheet,
-                    onFinish = onFinish
+            EnsureCameraPermission {
+                LivePoseLandmarkerBackground(
+                    modifier = Modifier.fillMaxSize()
                 )
-            } else {
-                ModalBottomSheet(
-                    onDismissRequest = sheetComponentOnDismiss,
-                    dragHandle = { BottomSheetDefaults.DragHandle() }
-                ) {
-                    InferenceInfo()
+
+                if (sheetComponentOnDismiss == null) {
+                    ButtonColumn(
+                        onInfo = showInfoSheet,
+                        onFinish = onFinish
+                    )
+                } else {
+                    ModalBottomSheet(
+                        onDismissRequest = sheetComponentOnDismiss,
+                        dragHandle = { BottomSheetDefaults.DragHandle() }
+                    ) {
+                        InferenceInfo()
+                    }
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun EnsureCameraPermission(
+    whenPermissionGranted: @Composable () -> Unit,
+) {
+    EnsureCameraPermission(
+        permissionRequestDialogTitle = "Camera Access Required",
+        rationale = "PoseDetector needs access to your camera to show pose landmarks.",
+
+        // The Rationale Dialog Buttons
+        rationaleAcceptedText = "Accept",
+        rationaleDeniedText = "Not now",
+
+        // In case of permanent denial the ToSettings Dialog Buttons
+        toSettingsText = "Settings",
+        cancelToSettingsText = "Cancel",
+
+        whenPermissionNotGrantedBackground = { PermissionNotGrantedBackground() },
+        whenPermissionGranted = whenPermissionGranted
+    )
+}
+
+@Composable
+private fun PermissionNotGrantedBackground() {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Text("Camera permission is required.")
     }
 }
 
